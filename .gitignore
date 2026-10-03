@@ -1,0 +1,6 @@
+# never commit keys or secrets
+*_ed25519
+*.pem
+*.key
+.env
+__pycache__/

@@ -1,0 +1,25 @@
+[Unit]
+Description=TaskFlow API service
+Documentation=https://github.com/<your-account>/taskflow-infra
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=taskflow
+Group=taskflow
+EnvironmentFile=/etc/taskflow/app.env
+WorkingDirectory=/opt/taskflow/current
+ExecStart=/usr/bin/python3 /opt/taskflow/current/taskflow_api.py
+Restart=on-failure
+RestartSec=3
+
+# sandboxing: service can write only to its own data/log dirs
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/taskflow /var/log/taskflow /srv/taskflow
+
+[Install]
+WantedBy=multi-user.target

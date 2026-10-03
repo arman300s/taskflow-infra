@@ -1,0 +1,17 @@
+#cloud-config
+# Common base configuration applied to every TaskFlow VM on first boot
+timezone: Asia/Almaty
+package_update: true
+package_upgrade: true
+packages:
+  - vim
+  - curl
+  - git
+  - htop
+  - tree
+  - net-tools
+  - ufw
+runcmd:
+  - ufw allow OpenSSH
+  - ufw --force enable
+  - echo "TaskFlow node provisioned on $(date)" > /etc/motd
