@@ -71,13 +71,18 @@ app() {
   mk /srv/$APP                     $APP_USER 750   # user data
   mk /srv/$APP/uploads             $APP_USER 750   # files uploaded by users
   mk /var/lib/$APP                 $APP_USER 750   # app runtime data / cache
-  file /etc/$APP/app.env root 640 <<'ENV'
+  # sample secrets only on the first run - never overwrite real ones
+  if [[ ! -f /etc/$APP/app.env ]]; then
+    file /etc/$APP/app.env root 640 <<'ENV'
 # Backend secrets (sample values!)
 APP_PORT=8000
 DB_URL=postgresql://taskflow:CHANGE_ME@tf-db:5432/taskflow
 SECRET_KEY=CHANGE_ME
 ENV
-  chgrp $APP_USER /etc/$APP/app.env
+    chgrp $APP_USER /etc/$APP/app.env
+  else
+    echo "  keep /etc/$APP/app.env (already exists)"
+  fi
   file /opt/$APP/app.py $APP_USER 644 <<'PY'
 # TaskFlow API placeholder
 from http.server import BaseHTTPRequestHandler, HTTPServer
