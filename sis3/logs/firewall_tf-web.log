@@ -1,0 +1,27 @@
+[1] default policies
+[2] SSH: open to the world (admins, class demo) but rate-limited
+[3] service ports of this role
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+80/tcp                     ALLOW IN    Anywhere                   # HTTP - Nginx, public
+22/tcp (OpenSSH)           LIMIT IN    Anywhere                   # SSH, rate-limited
+9100/tcp                   ALLOW IN    10.0.0.0/16                # node_exporter metrics - private
+80/tcp (v6)                ALLOW IN    Anywhere (v6)              # HTTP - Nginx, public
+22/tcp (OpenSSH (v6))      LIMIT IN    Anywhere (v6)              # SSH, rate-limited
+
+[4] fail2ban: ban SSH brute force for 1 hour
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	0
+|  |- Total failed:	0
+|  `- Journal matches:	_SYSTEMD_UNIT=sshd.service + _COMM=sshd
+`- Actions
+   |- Currently banned:	2
+   |- Total banned:	2
+   `- Banned IP list:	2.57.122.238 79.108.220.136
+Done: firewall configured on tf-web (web)

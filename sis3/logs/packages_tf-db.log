@@ -1,0 +1,12 @@
+[1] default repository: jq, fail2ban
+jq:
+  Installed: 1.7.1-3ubuntu0.24.04.2
+  Candidate: 1.7.1-3ubuntu0.24.04.2
+  jq jq-1.7, fail2ban Fail2Ban v1.0.2
+[2] new repository: PostgreSQL Global Development Group (apt.postgresql.org)
+  skipped (only tf-app needs the newer client)
+[3] without apt: node_exporter from GitHub releases
+node_exporter-1.12.1.linux-arm64.tar.gz: OK
+  node_exporter, version 1.12.1 (branch: HEAD, revision: 6044da783597cc3b57aef7580ddcdcff58a4ee99)
+  listening on 10.0.0.165:9100, service active
+Done: packages installed on tf-db

@@ -1,0 +1,45 @@
+== 1. Servers reachable over SSH
+  PASS  tf-web: SSH login                                    tf-web
+  PASS  tf-app: SSH login                                    tf-app
+  PASS  tf-db: SSH login                                     tf-db
+== 2. Packages (default repo / new repo / binary)
+  PASS  tf-web: jq (apt, default repo)                       jq-1.7
+  PASS  tf-web: fail2ban running (apt)                       active
+  PASS  tf-web: node_exporter running (binary)               active
+  PASS  tf-app: jq (apt, default repo)                       jq-1.7
+  PASS  tf-app: fail2ban running (apt)                       active
+  PASS  tf-app: node_exporter running (binary)               active
+  PASS  tf-db: jq (apt, default repo)                        jq-1.7
+  PASS  tf-db: fail2ban running (apt)                        active
+  PASS  tf-db: node_exporter running (binary)                active
+  PASS  tf-app: PGDG repository configured                    500 https://apt.postgresql.org/pub/repos/
+  PASS  tf-app: psql 18 client (new repo)                    psql (PostgreSQL) 18.6 (Ubuntu 18.6-1.pgdg
+== 3. Services
+  PASS  tf-web: nginx active                                 active
+  PASS  tf-web: nginx config valid                           nginx: configuration file /etc/nginx/nginx
+  PASS  tf-app: taskflow API active + enabled                active
+  PASS  tf-db: postgresql active                             active
+== 4. Firewall
+  PASS  tf-web: UFW active, SSH rate-limited                 OpenSSH LIMIT Anywhere # SSH, rate-limited
+  PASS  tf-web: fail2ban sshd jail on                         |- Currently banned: 0
+  PASS  tf-app: UFW active, SSH rate-limited                 OpenSSH LIMIT Anywhere # SSH, rate-limited
+  PASS  tf-app: fail2ban sshd jail on                         |- Currently banned: 4
+  PASS  tf-db: UFW active, SSH rate-limited                  OpenSSH LIMIT Anywhere # SSH, rate-limited
+  PASS  tf-db: fail2ban sshd jail on                          |- Currently banned: 0
+== 5. Network: allowed paths
+  PASS  internet -> tf-web:80  web page                      <h1>TaskFlow</h1>
+  PASS  internet -> tf-web -> tf-app  /api/health            {"status": "ok", "version": "1.1.0"}
+  PASS  internet -> POST /api/tasks (201)                    201
+  PASS  tf-web -> tf-app:8000 (private)                      {"status": "ok", "version": "1.1.0"}
+  PASS  tf-app -> tf-db:5432 SQL query                       0
+  PASS  tf-web -> tf-web:9100 metrics (private)              node_uname_info{domainname="(none)",machin
+  FAIL  tf-web -> tf-app:9100 metrics (private)              curl: (28) Connection timed out after 5002
+  FAIL  tf-web -> tf-db:9100 metrics (private)               curl: (28) Connection timed out after 5002
+== 6. Network: blocked from the internet
+  PASS  internet -> tf-app:8000 blocked                      
+  PASS  internet -> tf-db:5432 blocked                       
+  PASS  internet -> 92.5.56.128:9100 blocked                 
+  PASS  internet -> 92.5.88.31:9100 blocked                  
+  PASS  internet -> 130.61.232.1:9100 blocked                
+
+Result: 35 passed, 2 failed
