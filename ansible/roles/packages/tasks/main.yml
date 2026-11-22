@@ -1,0 +1,86 @@
+# SIS3: install packages in three different ways
+- name: 1. Packages from the default Ubuntu repository
+  ansible.builtin.apt:
+    name: "{{ default_repo_packages }}"
+    state: present
+  environment: { NEEDRESTART_SUSPEND: "1" }
+
+- name: 2. New repository apt.postgresql.org - key directory
+  ansible.builtin.file:
+    path: /usr/share/postgresql-common/pgdg
+    state: directory
+    mode: "0755"
+  when: tf_role == 'app'
+
+- name: 2. New repository apt.postgresql.org - signing key (trusted only for this repo)
+  ansible.builtin.get_url:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    dest: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+    mode: "0644"
+  when: tf_role == 'app'
+
+- name: 2. New repository apt.postgresql.org - source (deb822 format, key bound with Signed-By)
+  ansible.builtin.deb822_repository:
+    name: pgdg
+    types: deb
+    uris: https://apt.postgresql.org/pub/repos/apt
+    suites: "{{ ansible_distribution_release }}-pgdg"
+    components: main
+    signed_by: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+  when: tf_role == 'app'
+
+- name: 2. Old one-line source of the same repository (from the SIS3 script) is not needed
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pgdg.list
+    state: absent
+  when: tf_role == 'app'
+
+- name: 2. psql client from the new repository
+  ansible.builtin.apt:
+    name: "postgresql-client-{{ pg_client_version }}"
+    state: present
+    update_cache: true
+  when: tf_role == 'app'
+
+- name: 3. node_exporter from GitHub releases - download and verify SHA-256
+  ansible.builtin.get_url:
+    url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-{{ node_exporter_arch }}.tar.gz"
+    checksum: "sha256:https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/sha256sums.txt"
+    dest: "/opt/node_exporter-{{ node_exporter_version }}.tar.gz"
+    mode: "0644"
+
+- name: 3. node_exporter - unpack
+  ansible.builtin.unarchive:
+    src: "/opt/node_exporter-{{ node_exporter_version }}.tar.gz"
+    dest: /opt
+    remote_src: true
+    creates: "/opt/node_exporter-{{ node_exporter_version }}.linux-{{ node_exporter_arch }}/node_exporter"
+
+- name: 3. node_exporter - install binary to /usr/local/bin
+  ansible.builtin.copy:
+    src: "/opt/node_exporter-{{ node_exporter_version }}.linux-{{ node_exporter_arch }}/node_exporter"
+    dest: /usr/local/bin/node_exporter
+    remote_src: true
+    mode: "0755"
+  notify: Restart node_exporter
+
+- name: 3. node_exporter - system user
+  ansible.builtin.user:
+    name: node_exporter
+    system: true
+    create_home: false
+    shell: /usr/sbin/nologin
+
+- name: 3. node_exporter - systemd unit (listens on the private address only)
+  ansible.builtin.template:
+    src: node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service
+    mode: "0644"
+  notify: Restart node_exporter
+
+- name: 3. node_exporter - enabled and running
+  ansible.builtin.systemd_service:
+    name: node_exporter
+    enabled: true
+    state: started
+    daemon_reload: true

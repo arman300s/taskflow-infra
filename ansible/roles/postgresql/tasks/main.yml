@@ -1,0 +1,72 @@
+# SIS1: PostgreSQL on tf-db - private network only, database + user, daily backup
+- name: PostgreSQL server and Python driver for Ansible
+  ansible.builtin.apt:
+    name: [postgresql, python3-psycopg2]
+    state: present
+  environment: { NEEDRESTART_SUSPEND: "1" }
+
+- name: Listen on localhost and the private address only
+  ansible.builtin.lineinfile:
+    path: "/etc/postgresql/{{ pg_server_version }}/main/postgresql.conf"
+    regexp: '^#?listen_addresses'
+    line: "listen_addresses = 'localhost,{{ private_ip }}'"
+  notify: Restart postgresql
+
+- name: Allow only the private network to log in as taskflow (password, scram)
+  community.postgresql.postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ pg_server_version }}/main/pg_hba.conf"
+    contype: host
+    databases: "{{ db_name }}"
+    users: "{{ db_user }}"
+    source: "{{ private_net }}"
+    method: scram-sha-256
+  notify: Restart postgresql
+
+- name: PostgreSQL enabled and running
+  ansible.builtin.service:
+    name: postgresql
+    enabled: true
+    state: started
+
+- name: Apply config changes before creating objects
+  ansible.builtin.meta: flush_handlers
+
+- name: Database user
+  community.postgresql.postgresql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+  become: true
+  become_user: postgres
+  no_log: true
+
+- name: Database
+  community.postgresql.postgresql_db:
+    name: "{{ db_name }}"
+    owner: "{{ db_user }}"
+  become: true
+  become_user: postgres
+
+- name: Schema (CREATE TABLE IF NOT EXISTS - safe to run every time)
+  ansible.builtin.command: psql -v ON_ERROR_STOP=1 -q -d {{ db_name }} -f /etc/{{ app_name }}/db/init.sql
+  become: true
+  become_user: postgres
+  changed_when: false
+
+- name: Tables owned by the application user
+  community.postgresql.postgresql_owner:
+    db: "{{ db_name }}"
+    new_owner: "{{ db_user }}"
+    obj_name: "{{ item }}"
+    obj_type: table
+  loop: [users, tasks]
+  become: true
+  become_user: postgres
+
+- name: Daily backup at 02:00
+  ansible.builtin.cron:
+    name: taskflow db backup
+    cron_file: taskflow-backup
+    user: root
+    minute: "0"
+    hour: "2"
+    job: /usr/local/bin/{{ app_name }}-backup.sh

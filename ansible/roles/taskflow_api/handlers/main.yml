@@ -1,0 +1,5 @@
+- name: Restart taskflow
+  ansible.builtin.systemd_service:
+    name: taskflow
+    state: restarted
+    daemon_reload: true

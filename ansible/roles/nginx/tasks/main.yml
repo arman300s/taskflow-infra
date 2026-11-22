@@ -1,0 +1,29 @@
+# SIS1: front-end and reverse proxy on tf-web
+- name: Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+  environment: { NEEDRESTART_SUSPEND: "1" }
+
+- name: TaskFlow site config
+  ansible.builtin.template:
+    src: taskflow.conf.j2
+    dest: "/etc/{{ app_name }}/nginx/taskflow.conf"
+    mode: "0644"
+  notify: Reload nginx
+
+- name: Enable the site, disable the default one
+  ansible.builtin.file:
+    path: "/etc/nginx/sites-enabled/{{ item.name }}"
+    state: "{{ item.state }}"
+    src: "{{ item.src | default(omit) }}"
+  loop:
+    - { name: taskflow, state: link,   src: "/etc/{{ app_name }}/nginx/taskflow.conf" }
+    - { name: default,  state: absent }
+  notify: Reload nginx
+
+- name: Nginx enabled and running
+  ansible.builtin.service:
+    name: nginx
+    enabled: true
+    state: started

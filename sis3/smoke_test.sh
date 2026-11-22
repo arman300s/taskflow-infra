@@ -4,7 +4,10 @@
 # Needs the SSH aliases tf-web, tf-app, tf-db in ~/.ssh/config.
 set -uo pipefail
 
-WEB_IP=92.5.56.128; APP_IP=92.5.88.31; DB_IP=130.61.232.1
+# public IPs from the Ansible inventory that OpenTofu generates
+INV="$(dirname "$0")/../ansible/inventory/hosts.yml"
+ip_of() { sed -n "s/^ *$1: { ansible_host: \([0-9.]*\).*/\1/p" "$INV"; }
+WEB_IP=$(ip_of tf-web); APP_IP=$(ip_of tf-app); DB_IP=$(ip_of tf-db)
 PASS=0; FAIL=0
 if [[ -t 1 ]]; then G=$'\e[32m'; R=$'\e[31m'; B=$'\e[1m'; N=$'\e[0m'; else G=; R=; B=; N=; fi
 

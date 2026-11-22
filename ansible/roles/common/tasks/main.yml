@@ -1,0 +1,77 @@
+# SIS1: base configuration of every server (same as cloud-init.yaml / oracle/provision_base.sh)
+- name: Hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+# the free x86 micro server has only 1 GB RAM - add swap before upgrades and PostgreSQL
+- name: Swap file on small servers (< 2 GB RAM)
+  when: ansible_memtotal_mb < 2048
+  block:
+    - name: Create /swapfile
+      ansible.builtin.command: bash -c 'fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile'
+      args: { creates: /swapfile }
+      register: swapfile
+    - name: Enable swap now
+      ansible.builtin.command: swapon /swapfile
+      when: swapfile is changed
+    - name: Enable swap on boot
+      ansible.posix.mount: { src: /swapfile, path: none, fstype: swap, opts: sw, state: present }
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    upgrade: safe
+  environment: { NEEDRESTART_SUSPEND: "1" }
+
+- name: Base packages (default Ubuntu repository)
+  ansible.builtin.apt:
+    name: "{{ base_packages }}"
+    state: present
+  environment: { NEEDRESTART_SUSPEND: "1" }
+
+- name: Private names of all TaskFlow servers in /etc/hosts
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} TaskFlow servers (ansible)"
+    block: |
+      {% for h in groups['all'] | sort %}
+      {{ hostvars[h].private_ip }}  {{ h }}
+      {% endfor %}
+
+# Oracle images ship iptables-persistent (rejects all but SSH). Installing ufw removes it, so
+# Oracle's InstanceServices rules (only root may reach 169.254.x.x boot volume / metadata)
+# are moved into UFW to survive reboots.
+- name: Read Oracle InstanceServices rules
+  ansible.builtin.shell: sed -n 's/^-A InstanceServices /-A ufw-before-output /p' /etc/iptables/rules.v4
+  register: oracle_rules
+  changed_when: false
+  failed_when: false
+
+- name: Keep Oracle InstanceServices rules in UFW
+  ansible.builtin.blockinfile:
+    path: /etc/ufw/before.rules
+    marker: "# {mark} oracle instance services (ansible)"
+    insertbefore: "^# don't delete the 'COMMIT' line"
+    block: "{{ oracle_rules.stdout }}"
+  when: oracle_rules.stdout | length > 0
+
+- name: Remove Oracle rules still loaded in the kernel from boot time
+  ansible.builtin.shell: |
+    if iptables -L InstanceServices -n >/dev/null 2>&1; then
+      iptables -F INPUT; iptables -F FORWARD
+      iptables -D OUTPUT -d 169.254.0.0/16 -j InstanceServices
+      iptables -F InstanceServices; iptables -X InstanceServices
+      echo flushed
+    fi
+  register: flush
+  changed_when: "'flushed' in flush.stdout"
+
+- name: Message of the day
+  ansible.builtin.copy:
+    dest: /etc/motd
+    content: "TaskFlow node {{ inventory_hostname }} ({{ tf_role }}) - managed by Ansible\n"

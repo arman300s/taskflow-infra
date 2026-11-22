@@ -1,0 +1,6 @@
+# Only the smoke tests:  ansible-playbook smoke.yml
+- name: Smoke tests of every part
+  hosts: all
+  become: true
+  roles:
+    - smoke

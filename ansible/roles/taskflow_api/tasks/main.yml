@@ -1,0 +1,57 @@
+# SIS2: TaskFlow API as a sandboxed systemd service on tf-app
+- name: Python runtime
+  ansible.builtin.apt:
+    name: [python3, python3-venv, python3-pip]
+    state: present
+  environment: { NEEDRESTART_SUSPEND: "1" }
+
+- name: Secrets file (readable only by root and the service group)
+  ansible.builtin.template:
+    src: app.env.j2
+    dest: "/etc/{{ app_name }}/app.env"
+    owner: root
+    group: "{{ app_user }}"
+    mode: "0640"
+  no_log: true
+  notify: Restart taskflow
+
+- name: Release directory
+  ansible.builtin.file:
+    path: "/opt/{{ app_name }}/releases/v{{ app_version }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: "0755"
+
+- name: Application code
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../app/taskflow_api.py"
+    dest: "/opt/{{ app_name }}/releases/v{{ app_version }}/taskflow_api.py"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: "0755"
+  notify: Restart taskflow
+
+- name: Current release symlink (rollback = point it to an older release)
+  ansible.builtin.file:
+    path: "/opt/{{ app_name }}/current"
+    src: "/opt/{{ app_name }}/releases/v{{ app_version }}"
+    state: link
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    force: true
+  notify: Restart taskflow
+
+- name: systemd unit
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../app/taskflow.service"
+    dest: /etc/systemd/system/taskflow.service
+    mode: "0644"
+  notify: Restart taskflow
+
+- name: Service enabled at boot and running
+  ansible.builtin.systemd_service:
+    name: taskflow
+    enabled: true
+    state: started
+    daemon_reload: true

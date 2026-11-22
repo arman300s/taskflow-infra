@@ -1,0 +1,157 @@
+# SIS4: smoke tests for every part of the playbook. Run at the end of site.yml or alone:
+#   ansible-playbook smoke.yml
+- name: Collect service state
+  ansible.builtin.service_facts:
+
+# ---------- common
+- name: "common | timezone, hostname and /etc/hosts"
+  ansible.builtin.command: bash -c 'timedatectl show -p Timezone --value; hostname; getent hosts tf-web tf-app tf-db | wc -l'
+  register: t_common
+  changed_when: false
+  failed_when: t_common.stdout_lines != [timezone, inventory_hostname, '3']
+
+# ---------- filesystem
+- name: "filesystem | directories of the role exist with the right owner and mode"
+  ansible.builtin.stat:
+    path: "{{ item.path }}"
+  register: t_fs
+  failed_when: not t_fs.stat.exists or t_fs.stat.pw_name != item.owner or t_fs.stat.mode != item.mode
+  loop: "{{ checks[tf_role] }}"
+  loop_control: { label: "{{ item.path }}" }
+  vars:
+    checks:
+      web: [{ path: /var/www/taskflow, owner: www-data, mode: "0755" }, { path: /etc/taskflow, owner: root, mode: "0755" }]
+      app: [{ path: /opt/taskflow, owner: taskflow, mode: "0755" }, { path: /srv/taskflow, owner: taskflow, mode: "0750" },
+            { path: /etc/taskflow/app.env, owner: root, mode: "0640" }]
+      db:  [{ path: /var/backups/taskflow/db, owner: root, mode: "0700" }, { path: /usr/local/bin/taskflow-backup.sh, owner: root, mode: "0755" }]
+
+# ---------- users
+- name: "users | role groups and users exist, bot has no password"
+  ansible.builtin.shell: |
+    id -gn tfadmin; id -gn tfdev; id -gn tfauditor; id -gn automation_bot
+    getent shadow automation_bot | cut -d: -f2
+  register: t_users
+  changed_when: false
+  failed_when: t_users.stdout_lines != ['tf-admins', 'tf-developers', 'tf-auditors', 'tf-automation', '*']
+
+- name: "users | sudoers valid, bot may restart only taskflow"
+  ansible.builtin.shell: visudo -cf /etc/sudoers.d/taskflow && sudo -l -U automation_bot | grep -c "systemctl restart taskflow"
+  register: t_sudo
+  changed_when: false
+
+- name: "users | sshd: no root login, no passwords"
+  ansible.builtin.command: bash -c "sshd -T | grep -E '^(permitrootlogin|passwordauthentication) '"
+  register: t_sshd
+  changed_when: false
+  failed_when: "'permitrootlogin no' not in t_sshd.stdout or 'passwordauthentication no' not in t_sshd.stdout"
+
+- name: "users | developer can write code but cannot read user data (tf-app)"
+  ansible.builtin.command: bash -c 'sudo -u tfdev test -w /opt/taskflow && ! sudo -u tfdev ls /srv/taskflow 2>/dev/null'
+  changed_when: false
+  when: tf_role == 'app'
+
+# ---------- packages
+- name: "packages | jq, fail2ban (apt) and node_exporter (binary) installed"
+  ansible.builtin.command: bash -c 'jq --version && fail2ban-client --version | head -1 && node_exporter --version 2>&1 | head -1'
+  register: t_pkgs
+  changed_when: false
+  failed_when: t_pkgs.rc != 0 or node_exporter_version not in t_pkgs.stdout
+
+- name: "packages | psql {{ pg_client_version }} from apt.postgresql.org (tf-app)"
+  ansible.builtin.command: bash -c 'apt-cache policy postgresql-client-{{ pg_client_version }} | grep -q apt.postgresql.org && /usr/lib/postgresql/{{ pg_client_version }}/bin/psql --version'
+  changed_when: false
+  when: tf_role == 'app'
+
+# ---------- services
+- name: "services | required services are running and enabled"
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services[item ~ '.service'].state == 'running'
+      - ansible_facts.services[item ~ '.service'].status == 'enabled'
+    quiet: true
+  loop: "{{ ['ssh', 'fail2ban', 'node_exporter'] + role_services[tf_role] }}"
+  vars:
+    role_services: { web: [nginx, docker], app: [taskflow], db: [postgresql] }
+
+# ---------- firewall
+- name: "firewall | UFW active, SSH rate-limited, only the role ports open"
+  ansible.builtin.command: ufw status
+  register: t_ufw
+  changed_when: false
+  failed_when: >-
+    'Status: active' not in t_ufw.stdout or
+    not (t_ufw.stdout is search('OpenSSH +LIMIT')) or
+    not (t_ufw.stdout is search(role_port[tf_role] ~ '/tcp +ALLOW'))
+  vars:
+    role_port: { web: "80", app: "8000", db: "5432" }
+
+- name: "firewall | fail2ban sshd jail active"
+  ansible.builtin.command: fail2ban-client status sshd
+  changed_when: false
+
+# ---------- network: private paths between the servers
+- name: "network | tf-web -> tf-app:8000 API health"
+  ansible.builtin.uri:
+    url: "http://tf-app:{{ app_port }}/health"
+    return_content: true
+  register: t_api
+  failed_when: t_api.json.status != 'ok' or t_api.json.version != app_version
+  when: tf_role == 'web'
+
+- name: "network | tf-web -> every server :9100 metrics (private)"
+  ansible.builtin.uri:
+    url: "http://{{ item }}:9100/metrics"
+    return_content: true
+  register: t_metrics
+  failed_when: "'node_uname_info' not in t_metrics.content"
+  loop: "{{ groups['all'] | sort }}"
+  when: tf_role == 'web'
+
+- name: "network | tf-app -> tf-db:5432 SQL query as taskflow"
+  ansible.builtin.shell: |
+    set -a; . /etc/taskflow/app.env
+    /usr/lib/postgresql/{{ pg_client_version }}/bin/psql "$DB_URL" -tAc "select count(*) from information_schema.tables where table_name in ('users','tasks')"
+  register: t_sql
+  changed_when: false
+  failed_when: t_sql.stdout | trim != '2'
+  when: tf_role == 'app'
+
+- name: "container | taskflow-status healthy (tf-web)"
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:{{ status_port }}/api/status"
+    return_content: true
+  register: t_status
+  failed_when: not t_status.json.api.up or (t_status.json.nodes | rejectattr('up') | list | length) > 0
+  when: tf_role == 'web'
+
+# ---------- network: from the internet (runs on the laptop)
+- name: "internet | public paths work"
+  ansible.builtin.uri:
+    url: "http://{{ hostvars[groups['web'][0]].ansible_host }}{{ item.path }}"
+    status_code: "{{ item.code }}"
+    method: "{{ item.method }}"
+    body: "{{ item.body | default(omit) }}"
+    return_content: true
+  loop:
+    - { path: /,            code: 200, method: GET }
+    - { path: /api/health,  code: 200, method: GET }
+    - { path: /api/tasks,   code: 201, method: POST, body: '{"title": "ansible smoke test"}' }
+    - { path: /status/,     code: 200, method: GET }
+  loop_control: { label: "{{ item.method }} {{ item.path }}" }
+  delegate_to: localhost
+  become: false
+  run_once: true
+
+- name: "internet | private ports are closed from outside"
+  ansible.builtin.wait_for:
+    host: "{{ hostvars[item.0].ansible_host }}"
+    port: "{{ item.1 }}"
+    timeout: 3
+  register: t_closed
+  failed_when: t_closed is succeeded
+  ignore_errors: false
+  loop: "{{ groups['app'] | product(['8000', '9100']) + groups['db'] | product(['5432', '9100']) + groups['web'] | product(['9100']) }}"
+  loop_control: { label: "{{ item.0 }}:{{ item.1 }} must be closed" }
+  delegate_to: localhost
+  become: false
+  run_once: true

@@ -1,0 +1,7 @@
+# TaskFlow common configuration (managed by Ansible)
+ENV=production
+ROLE={{ tf_role }}
+LOG_DIR=/var/log/{{ app_name }}
+WEB_HOST=tf-web
+APP_HOST=tf-app
+DB_HOST=tf-db

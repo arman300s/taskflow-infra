@@ -1,0 +1,11 @@
+# managed by Ansible
+[DEFAULT]
+# never ban the servers' own private network
+ignoreip = 127.0.0.1/8 ::1 {{ private_net }}
+bantime  = 1h
+findtime = 10m
+maxretry = 5
+backend  = systemd
+
+[sshd]
+enabled = true

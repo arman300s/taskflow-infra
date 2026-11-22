@@ -1,0 +1,57 @@
+# SIS3: UFW rules per role + fail2ban (layer 1 - Oracle Security List - is managed by OpenTofu)
+- name: Default policies
+  community.general.ufw:
+    default: "{{ item.policy }}"
+    direction: "{{ item.dir }}"
+  loop:
+    - { dir: incoming, policy: deny }
+    - { dir: outgoing, policy: allow }
+    - { dir: routed,   policy: deny }
+
+- name: SSH open to the world but rate-limited (6 new connections / 30 s per IP)
+  community.general.ufw:
+    rule: limit
+    name: OpenSSH
+    comment: SSH, rate-limited
+
+- name: Remove a plain (not limited) SSH rule if it exists
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+    delete: true
+
+- name: Service ports of this role
+  community.general.ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: tcp
+    from_ip: "{{ item.src }}"
+    comment: "{{ item.comment }}"
+  loop: "{{ role_ports[tf_role] + [metrics] }}"
+  loop_control: { label: "{{ item.port }} from {{ item.src }}" }
+  vars:
+    metrics: { port: "9100", src: "{{ private_net }}", comment: node_exporter metrics - private }
+    role_ports:
+      web: [{ port: "80",   src: any,              comment: HTTP - Nginx, public },
+            # the status container (Docker bridge network) reads the metrics of its own host
+            { port: "9100", src: 172.17.0.0/16,    comment: node_exporter - from status container }]
+      app: [{ port: "8000", src: "{{ private_net }}", comment: TaskFlow API - from tf-web }]
+      db:  [{ port: "5432", src: "{{ private_net }}", comment: PostgreSQL - from tf-app }]
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
+    logging: "low"
+
+- name: fail2ban - ban SSH brute force for 1 hour
+  ansible.builtin.template:
+    src: jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    mode: "0644"
+  notify: Restart fail2ban
+
+- name: fail2ban enabled and running
+  ansible.builtin.service:
+    name: fail2ban
+    enabled: true
+    state: started

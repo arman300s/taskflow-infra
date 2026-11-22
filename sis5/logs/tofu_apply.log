@@ -1,0 +1,622 @@
+data.oci_core_images.ubuntu: Reading...
+data.oci_identity_availability_domains.ads: Reading...
+data.oci_identity_availability_domains.ads: Read complete after 0s [id=IdentityAvailabilityDomainsDataSource-649138658]
+data.oci_core_images.ubuntu: Read complete after 0s [id=CoreImagesDataSource-1646063433]
+
+OpenTofu used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+OpenTofu will perform the following actions:
+
+  # local_file.inventory will be created
+  + resource "local_file" "inventory" {
+      + content              = (known after apply)
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0644"
+      + filename             = "./../ansible/inventory/hosts.yml"
+      + id                   = (known after apply)
+    }
+
+  # oci_core_instance.server["tf-app"] will be created
+  + resource "oci_core_instance" "server" {
+      + availability_domain                 = "pgyR:EU-FRANKFURT-1-AD-1"
+      + boot_volume_id                      = (known after apply)
+      + capacity_reservation_id             = (known after apply)
+      + compartment_id                      = "ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua"
+      + compute_cluster_id                  = (known after apply)
+      + dedicated_vm_host_id                = (known after apply)
+      + defined_tags                        = (known after apply)
+      + display_name                        = "tf-app"
+      + extended_metadata                   = (known after apply)
+      + fault_domain                        = (known after apply)
+      + freeform_tags                       = {
+          + "project" = "taskflow"
+          + "role"    = "app"
+        }
+      + hostname_label                      = (known after apply)
+      + id                                  = (known after apply)
+      + image                               = (known after apply)
+      + instance_configuration_id           = (known after apply)
+      + ipxe_script                         = (known after apply)
+      + is_ai_enterprise_enabled            = (known after apply)
+      + is_cross_numa_node                  = (known after apply)
+      + is_pv_encryption_in_transit_enabled = (known after apply)
+      + launch_mode                         = (known after apply)
+      + metadata                            = {
+          + "ssh_authorized_keys" = <<-EOT
+                ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRGEWanT876ZPGZcSpfy18BMqz+POWuw/J6fThYnPA7 armanshoybek1@gmail.com
+            EOT
+        }
+      + private_ip                          = (known after apply)
+      + public_ip                           = (known after apply)
+      + region                              = (known after apply)
+      + security_attributes                 = (known after apply)
+      + security_attributes_state           = (known after apply)
+      + shape                               = "VM.Standard.A1.Flex"
+      + state                               = (known after apply)
+      + subnet_id                           = (known after apply)
+      + system_tags                         = (known after apply)
+      + time_created                        = (known after apply)
+      + time_maintenance_reboot_due         = (known after apply)
+
+      + agent_config (known after apply)
+
+      + availability_config (known after apply)
+
+      + create_vnic_details {
+          + assign_ipv6ip          = (known after apply)
+          + assign_public_ip       = "true"
+          + defined_tags           = (known after apply)
+          + display_name           = (known after apply)
+          + freeform_tags          = (known after apply)
+          + hostname_label         = "tf-app"
+          + nsg_ids                = (known after apply)
+          + private_ip             = "10.0.0.209"
+          + security_attributes    = (known after apply)
+          + skip_source_dest_check = (known after apply)
+          + subnet_cidr            = (known after apply)
+          + subnet_id              = (known after apply)
+          + vlan_id                = (known after apply)
+
+          + ipv6address_ipv6subnet_cidr_pair_details (known after apply)
+        }
+
+      + instance_options (known after apply)
+
+      + launch_options (known after apply)
+
+      + launch_volume_attachments (known after apply)
+
+      + licensing_configs (known after apply)
+
+      + placement_constraint_details (known after apply)
+
+      + platform_config (known after apply)
+
+      + preemptible_instance_config (known after apply)
+
+      + shape_config {
+          + baseline_ocpu_utilization     = (known after apply)
+          + gpu_description               = (known after apply)
+          + gpus                          = (known after apply)
+          + local_disk_description        = (known after apply)
+          + local_disks                   = (known after apply)
+          + local_disks_total_size_in_gbs = (known after apply)
+          + max_vnic_attachments          = (known after apply)
+          + memory_in_gbs                 = 6
+          + networking_bandwidth_in_gbps  = (known after apply)
+          + nvmes                         = (known after apply)
+          + ocpus                         = 1
+          + processor_description         = (known after apply)
+          + resource_management           = (known after apply)
+          + vcpus                         = (known after apply)
+        }
+
+      + source_details {
+          + boot_volume_size_in_gbs = "50"
+          + boot_volume_vpus_per_gb = (known after apply)
+          + source_id               = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaast7orcavt5xwy6jkkebtl4o2il34umu5gomppawzlabv6ejgom7a"
+          + source_type             = "image"
+
+          + instance_source_image_filter_details (known after apply)
+        }
+    }
+
+  # oci_core_instance.server["tf-db"] will be created
+  + resource "oci_core_instance" "server" {
+      + availability_domain                 = "pgyR:EU-FRANKFURT-1-AD-1"
+      + boot_volume_id                      = (known after apply)
+      + capacity_reservation_id             = (known after apply)
+      + compartment_id                      = "ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua"
+      + compute_cluster_id                  = (known after apply)
+      + dedicated_vm_host_id                = (known after apply)
+      + defined_tags                        = (known after apply)
+      + display_name                        = "tf-db"
+      + extended_metadata                   = (known after apply)
+      + fault_domain                        = (known after apply)
+      + freeform_tags                       = {
+          + "project" = "taskflow"
+          + "role"    = "db"
+        }
+      + hostname_label                      = (known after apply)
+      + id                                  = (known after apply)
+      + image                               = (known after apply)
+      + instance_configuration_id           = (known after apply)
+      + ipxe_script                         = (known after apply)
+      + is_ai_enterprise_enabled            = (known after apply)
+      + is_cross_numa_node                  = (known after apply)
+      + is_pv_encryption_in_transit_enabled = (known after apply)
+      + launch_mode                         = (known after apply)
+      + metadata                            = {
+          + "ssh_authorized_keys" = <<-EOT
+                ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRGEWanT876ZPGZcSpfy18BMqz+POWuw/J6fThYnPA7 armanshoybek1@gmail.com
+            EOT
+        }
+      + private_ip                          = (known after apply)
+      + public_ip                           = (known after apply)
+      + region                              = (known after apply)
+      + security_attributes                 = (known after apply)
+      + security_attributes_state           = (known after apply)
+      + shape                               = "VM.Standard.A1.Flex"
+      + state                               = (known after apply)
+      + subnet_id                           = (known after apply)
+      + system_tags                         = (known after apply)
+      + time_created                        = (known after apply)
+      + time_maintenance_reboot_due         = (known after apply)
+
+      + agent_config (known after apply)
+
+      + availability_config (known after apply)
+
+      + create_vnic_details {
+          + assign_ipv6ip          = (known after apply)
+          + assign_public_ip       = "true"
+          + defined_tags           = (known after apply)
+          + display_name           = (known after apply)
+          + freeform_tags          = (known after apply)
+          + hostname_label         = "tf-db"
+          + nsg_ids                = (known after apply)
+          + private_ip             = "10.0.0.165"
+          + security_attributes    = (known after apply)
+          + skip_source_dest_check = (known after apply)
+          + subnet_cidr            = (known after apply)
+          + subnet_id              = (known after apply)
+          + vlan_id                = (known after apply)
+
+          + ipv6address_ipv6subnet_cidr_pair_details (known after apply)
+        }
+
+      + instance_options (known after apply)
+
+      + launch_options (known after apply)
+
+      + launch_volume_attachments (known after apply)
+
+      + licensing_configs (known after apply)
+
+      + placement_constraint_details (known after apply)
+
+      + platform_config (known after apply)
+
+      + preemptible_instance_config (known after apply)
+
+      + shape_config {
+          + baseline_ocpu_utilization     = (known after apply)
+          + gpu_description               = (known after apply)
+          + gpus                          = (known after apply)
+          + local_disk_description        = (known after apply)
+          + local_disks                   = (known after apply)
+          + local_disks_total_size_in_gbs = (known after apply)
+          + max_vnic_attachments          = (known after apply)
+          + memory_in_gbs                 = 6
+          + networking_bandwidth_in_gbps  = (known after apply)
+          + nvmes                         = (known after apply)
+          + ocpus                         = 1
+          + processor_description         = (known after apply)
+          + resource_management           = (known after apply)
+          + vcpus                         = (known after apply)
+        }
+
+      + source_details {
+          + boot_volume_size_in_gbs = "50"
+          + boot_volume_vpus_per_gb = (known after apply)
+          + source_id               = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaast7orcavt5xwy6jkkebtl4o2il34umu5gomppawzlabv6ejgom7a"
+          + source_type             = "image"
+
+          + instance_source_image_filter_details (known after apply)
+        }
+    }
+
+  # oci_core_instance.server["tf-web"] will be created
+  + resource "oci_core_instance" "server" {
+      + availability_domain                 = "pgyR:EU-FRANKFURT-1-AD-1"
+      + boot_volume_id                      = (known after apply)
+      + capacity_reservation_id             = (known after apply)
+      + compartment_id                      = "ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua"
+      + compute_cluster_id                  = (known after apply)
+      + dedicated_vm_host_id                = (known after apply)
+      + defined_tags                        = (known after apply)
+      + display_name                        = "tf-web"
+      + extended_metadata                   = (known after apply)
+      + fault_domain                        = (known after apply)
+      + freeform_tags                       = {
+          + "project" = "taskflow"
+          + "role"    = "web"
+        }
+      + hostname_label                      = (known after apply)
+      + id                                  = (known after apply)
+      + image                               = (known after apply)
+      + instance_configuration_id           = (known after apply)
+      + ipxe_script                         = (known after apply)
+      + is_ai_enterprise_enabled            = (known after apply)
+      + is_cross_numa_node                  = (known after apply)
+      + is_pv_encryption_in_transit_enabled = (known after apply)
+      + launch_mode                         = (known after apply)
+      + metadata                            = {
+          + "ssh_authorized_keys" = <<-EOT
+                ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRGEWanT876ZPGZcSpfy18BMqz+POWuw/J6fThYnPA7 armanshoybek1@gmail.com
+            EOT
+        }
+      + private_ip                          = (known after apply)
+      + public_ip                           = (known after apply)
+      + region                              = (known after apply)
+      + security_attributes                 = (known after apply)
+      + security_attributes_state           = (known after apply)
+      + shape                               = "VM.Standard.A1.Flex"
+      + state                               = (known after apply)
+      + subnet_id                           = (known after apply)
+      + system_tags                         = (known after apply)
+      + time_created                        = (known after apply)
+      + time_maintenance_reboot_due         = (known after apply)
+
+      + agent_config (known after apply)
+
+      + availability_config (known after apply)
+
+      + create_vnic_details {
+          + assign_ipv6ip          = (known after apply)
+          + assign_public_ip       = "true"
+          + defined_tags           = (known after apply)
+          + display_name           = (known after apply)
+          + freeform_tags          = (known after apply)
+          + hostname_label         = "tf-web"
+          + nsg_ids                = (known after apply)
+          + private_ip             = "10.0.0.21"
+          + security_attributes    = (known after apply)
+          + skip_source_dest_check = (known after apply)
+          + subnet_cidr            = (known after apply)
+          + subnet_id              = (known after apply)
+          + vlan_id                = (known after apply)
+
+          + ipv6address_ipv6subnet_cidr_pair_details (known after apply)
+        }
+
+      + instance_options (known after apply)
+
+      + launch_options (known after apply)
+
+      + launch_volume_attachments (known after apply)
+
+      + licensing_configs (known after apply)
+
+      + placement_constraint_details (known after apply)
+
+      + platform_config (known after apply)
+
+      + preemptible_instance_config (known after apply)
+
+      + shape_config {
+          + baseline_ocpu_utilization     = (known after apply)
+          + gpu_description               = (known after apply)
+          + gpus                          = (known after apply)
+          + local_disk_description        = (known after apply)
+          + local_disks                   = (known after apply)
+          + local_disks_total_size_in_gbs = (known after apply)
+          + max_vnic_attachments          = (known after apply)
+          + memory_in_gbs                 = 6
+          + networking_bandwidth_in_gbps  = (known after apply)
+          + nvmes                         = (known after apply)
+          + ocpus                         = 1
+          + processor_description         = (known after apply)
+          + resource_management           = (known after apply)
+          + vcpus                         = (known after apply)
+        }
+
+      + source_details {
+          + boot_volume_size_in_gbs = "50"
+          + boot_volume_vpus_per_gb = (known after apply)
+          + source_id               = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaast7orcavt5xwy6jkkebtl4o2il34umu5gomppawzlabv6ejgom7a"
+          + source_type             = "image"
+
+          + instance_source_image_filter_details (known after apply)
+        }
+    }
+
+  # oci_core_internet_gateway.igw will be created
+  + resource "oci_core_internet_gateway" "igw" {
+      + compartment_id = "ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua"
+      + defined_tags   = (known after apply)
+      + display_name   = "taskflow-igw"
+      + enabled        = true
+      + freeform_tags  = (known after apply)
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + state          = (known after apply)
+      + time_created   = (known after apply)
+      + vcn_id         = (known after apply)
+    }
+
+  # oci_core_route_table.public will be created
+  + resource "oci_core_route_table" "public" {
+      + compartment_id = "ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua"
+      + defined_tags   = (known after apply)
+      + display_name   = "taskflow-public-rt"
+      + freeform_tags  = (known after apply)
+      + id             = (known after apply)
+      + state          = (known after apply)
+      + time_created   = (known after apply)
+      + vcn_id         = (known after apply)
+
+      + route_rules {
+          + cidr_block        = (known after apply)
+          + description       = (known after apply)
+          + destination       = "0.0.0.0/0"
+          + destination_type  = "CIDR_BLOCK"
+          + network_entity_id = (known after apply)
+          + route_type        = (known after apply)
+        }
+    }
+
+  # oci_core_security_list.taskflow will be created
+  + resource "oci_core_security_list" "taskflow" {
+      + compartment_id = "ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua"
+      + defined_tags   = (known after apply)
+      + display_name   = "taskflow-security-list"
+      + freeform_tags  = (known after apply)
+      + id             = (known after apply)
+      + state          = (known after apply)
+      + time_created   = (known after apply)
+      + vcn_id         = (known after apply)
+
+      + egress_security_rules {
+          + description      = (known after apply)
+          + destination      = "0.0.0.0/0"
+          + destination_type = (known after apply)
+          + protocol         = "all"
+          + stateless        = (known after apply)
+        }
+
+      + ingress_security_rules {
+          + description = "api"
+          + protocol    = "6"
+          + source      = "10.0.0.0/16"
+          + source_type = (known after apply)
+          + stateless   = false
+
+          + tcp_options {
+              + max = 8000
+              + min = 8000
+            }
+        }
+      + ingress_security_rules {
+          + description = "http"
+          + protocol    = "6"
+          + source      = "0.0.0.0/0"
+          + source_type = (known after apply)
+          + stateless   = false
+
+          + tcp_options {
+              + max = 80
+              + min = 80
+            }
+        }
+      + ingress_security_rules {
+          + description = "metrics"
+          + protocol    = "6"
+          + source      = "10.0.0.0/16"
+          + source_type = (known after apply)
+          + stateless   = false
+
+          + tcp_options {
+              + max = 9100
+              + min = 9100
+            }
+        }
+      + ingress_security_rules {
+          + description = "postgresql"
+          + protocol    = "6"
+          + source      = "10.0.0.0/16"
+          + source_type = (known after apply)
+          + stateless   = false
+
+          + tcp_options {
+              + max = 5432
+              + min = 5432
+            }
+        }
+      + ingress_security_rules {
+          + description = "ssh"
+          + protocol    = "6"
+          + source      = "0.0.0.0/0"
+          + source_type = (known after apply)
+          + stateless   = false
+
+          + tcp_options {
+              + max = 22
+              + min = 22
+            }
+        }
+      + ingress_security_rules {
+          + description = (known after apply)
+          + protocol    = "1"
+          + source      = "10.0.0.0/16"
+          + source_type = (known after apply)
+          + stateless   = false
+
+          + icmp_options {
+              + code = -1
+              + type = 3
+            }
+        }
+      + ingress_security_rules {
+          + description = (known after apply)
+          + protocol    = "1"
+          + source      = "0.0.0.0/0"
+          + source_type = (known after apply)
+          + stateless   = false
+
+          + icmp_options {
+              + code = 4
+              + type = 3
+            }
+        }
+    }
+
+  # oci_core_subnet.public will be created
+  + resource "oci_core_subnet" "public" {
+      + availability_domain        = (known after apply)
+      + cidr_block                 = "10.0.0.0/24"
+      + compartment_id             = "ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua"
+      + defined_tags               = (known after apply)
+      + dhcp_options_id            = (known after apply)
+      + display_name               = "taskflow-public-subnet"
+      + dns_label                  = "public"
+      + freeform_tags              = (known after apply)
+      + id                         = (known after apply)
+      + ipv4cidr_blocks            = (known after apply)
+      + ipv6cidr_block             = (known after apply)
+      + ipv6cidr_blocks            = (known after apply)
+      + ipv6virtual_router_ip      = (known after apply)
+      + prohibit_internet_ingress  = (known after apply)
+      + prohibit_public_ip_on_vnic = (known after apply)
+      + route_table_id             = (known after apply)
+      + security_list_ids          = (known after apply)
+      + state                      = (known after apply)
+      + subnet_domain_name         = (known after apply)
+      + time_created               = (known after apply)
+      + vcn_id                     = (known after apply)
+      + virtual_router_ip          = (known after apply)
+      + virtual_router_mac         = (known after apply)
+    }
+
+  # oci_core_vcn.taskflow will be created
+  + resource "oci_core_vcn" "taskflow" {
+      + byoipv6cidr_blocks               = (known after apply)
+      + cidr_block                       = (known after apply)
+      + cidr_blocks                      = [
+          + "10.0.0.0/16",
+        ]
+      + compartment_id                   = "ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua"
+      + default_dhcp_options_id          = (known after apply)
+      + default_route_table_id           = (known after apply)
+      + default_security_list_id         = (known after apply)
+      + defined_tags                     = (known after apply)
+      + display_name                     = "taskflow-vcn"
+      + dns_label                        = "taskflow"
+      + freeform_tags                    = (known after apply)
+      + id                               = (known after apply)
+      + ipv6cidr_blocks                  = (known after apply)
+      + ipv6private_cidr_blocks          = (known after apply)
+      + is_ipv6enabled                   = (known after apply)
+      + is_oracle_gua_allocation_enabled = (known after apply)
+      + security_attributes              = (known after apply)
+      + state                            = (known after apply)
+      + time_created                     = (known after apply)
+      + vcn_domain_name                  = (known after apply)
+
+      + byoipv6cidr_details (known after apply)
+    }
+
+Plan: 9 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + image   = "Canonical-Ubuntu-24.04-aarch64-2026.11.05-0"
+  + servers = {
+      + tf-app = {
+          + private_ip = (known after apply)
+          + public_ip  = (known after apply)
+          + shape      = "VM.Standard.A1.Flex (1 OCPU, 6 GB)"
+          + ssh        = (known after apply)
+        }
+      + tf-db  = {
+          + private_ip = (known after apply)
+          + public_ip  = (known after apply)
+          + shape      = "VM.Standard.A1.Flex (1 OCPU, 6 GB)"
+          + ssh        = (known after apply)
+        }
+      + tf-web = {
+          + private_ip = (known after apply)
+          + public_ip  = (known after apply)
+          + shape      = "VM.Standard.A1.Flex (1 OCPU, 6 GB)"
+          + ssh        = (known after apply)
+        }
+    }
+  + website = (known after apply)
+oci_core_vcn.taskflow: Creating...
+oci_core_vcn.taskflow: Creation complete after 1s [id=ocid1.vcn.oc1.eu-frankfurt-1.amaaaaaa4lgxpaaauea2mwormgf6jkwhfte4i7ddbfheazd2t3tkncw2rd5q]
+oci_core_internet_gateway.igw: Creating...
+oci_core_security_list.taskflow: Creating...
+oci_core_internet_gateway.igw: Creation complete after 1s [id=ocid1.internetgateway.oc1.eu-frankfurt-1.aaaaaaaaqrelvr76uoxefkpdozaxujocd43tuvhjapilhzo7k3xacuprruca]
+oci_core_route_table.public: Creating...
+oci_core_security_list.taskflow: Creation complete after 1s [id=ocid1.securitylist.oc1.eu-frankfurt-1.aaaaaaaa6tqfllmm732pfenhm7plxbfplo7vuccuks5kzleylajoygcev7ha]
+oci_core_route_table.public: Creation complete after 0s [id=ocid1.routetable.oc1.eu-frankfurt-1.aaaaaaaabns2zy35rhm7zra4m7ntbrjnsrae2d7tax4dcfb7f7yvn5lriq2q]
+oci_core_subnet.public: Creating...
+oci_core_subnet.public: Creation complete after 4s [id=ocid1.subnet.oc1.eu-frankfurt-1.aaaaaaaaxsxl573npw2jawancvdp55zxyg62zdbu2aock2pqnap5y4simqlq]
+oci_core_instance.server["tf-db"]: Creating...
+oci_core_instance.server["tf-web"]: Creating...
+oci_core_instance.server["tf-app"]: Creating...
+
+Error: 400-LimitExceeded, The following service limits were exceeded: standard-a1-memory-count, standard-a1-memory-regional-count, standard-a1-core-count, standard-a1-core-regional-count. You can request a service limit increase from the Console's Limits, Quotas and Usage page or from the Help menu.
+Suggestion: Request a service limit increase for this resource Core Instance
+Documentation: https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance 
+API Reference: https://docs.oracle.com/iaas/api/#/en/iaas/20160918/Instance/LaunchInstance 
+Request Target: POST https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/instances 
+Provider version: 7.32.0, released on 2026-01-27. This provider is 42 Update(s) behind to current. 
+Service: Core Instance 
+Operation Name: LaunchInstance 
+OPC request ID: eee6bab1102074a44ae2baadbdcb90fd/AAF5C60B77B13DE49232036B46524126/8819E90EF478D0C387BE68503C10CD97 
+
+
+  with oci_core_instance.server["tf-db"],
+  on servers.tf line 15, in resource "oci_core_instance" "server":
+  15: resource "oci_core_instance" "server" {
+
+
+Error: 500-InternalError, Out of host capacity.
+Suggestion: The service for this resource encountered an error. Please contact support for help with service: Core Instance
+Documentation: https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance 
+API Reference: https://docs.oracle.com/iaas/api/#/en/iaas/20160918/Instance/LaunchInstance 
+Request Target: POST https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/instances 
+Provider version: 7.32.0, released on 2026-01-27. This provider is 42 Update(s) behind to current. 
+Service: Core Instance 
+Operation Name: LaunchInstance 
+OPC request ID: 0d9d98bf4c1f22715c0f3edc0ed20a4a/500FADC30B2A832E9232036B465241BF/811921BE7A31B64AEF18D75A5B2DEC83 
+
+
+  with oci_core_instance.server["tf-web"],
+  on servers.tf line 15, in resource "oci_core_instance" "server":
+  15: resource "oci_core_instance" "server" {
+
+
+Error: 500-InternalError, Out of host capacity.
+Suggestion: The service for this resource encountered an error. Please contact support for help with service: Core Instance
+Documentation: https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance 
+API Reference: https://docs.oracle.com/iaas/api/#/en/iaas/20160918/Instance/LaunchInstance 
+Request Target: POST https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/instances 
+Provider version: 7.32.0, released on 2026-01-27. This provider is 42 Update(s) behind to current. 
+Service: Core Instance 
+Operation Name: LaunchInstance 
+OPC request ID: aadef4abe2e83b952aa976c563e079e2/DA50A5EE63D0FEEF9232036B46524137/84E1A25E7E2062BDC9CF3F35FAD5776D 
+
+
+  with oci_core_instance.server["tf-app"],
+  on servers.tf line 15, in resource "oci_core_instance" "server":
+  15: resource "oci_core_instance" "server" {
+

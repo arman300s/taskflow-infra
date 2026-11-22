@@ -1,0 +1,47 @@
+# TaskFlow - whole setup from plain Ubuntu 24.04 servers to the working project.
+#   ansible-playbook site.yml              # everything + smoke tests
+#   ansible-playbook site.yml --tags smoke # only the smoke tests
+- name: Wait until new servers accept SSH
+  hosts: all
+  gather_facts: false
+  tags: always
+  tasks:
+    - name: Wait for SSH / cloud-init
+      ansible.builtin.wait_for_connection:
+        timeout: 600
+
+- name: Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)
+  hosts: all
+  become: true
+  roles:
+    - { role: common,     tags: [common, sis1] }
+    - { role: filesystem, tags: [filesystem, sis1] }
+    - { role: users,      tags: [users, sis2] }
+    - { role: packages,   tags: [packages, sis3] }
+    - { role: firewall,   tags: [firewall, sis3] }
+
+- name: Database server
+  hosts: db
+  become: true
+  roles:
+    - { role: postgresql, tags: [postgresql, sis1] }
+
+- name: Application server
+  hosts: app
+  become: true
+  roles:
+    - { role: taskflow_api, tags: [api, sis2] }
+
+- name: Web server
+  hosts: web
+  become: true
+  roles:
+    - { role: nginx,      tags: [nginx, sis1] }
+    - { role: status_app, tags: [status, sis5] }
+
+- name: Smoke tests of every part
+  hosts: all
+  become: true
+  tags: smoke
+  roles:
+    - smoke

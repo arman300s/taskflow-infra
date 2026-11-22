@@ -1,0 +1,13 @@
+# managed by Ansible
+server {
+    listen 80;
+    server_name _;
+    root /var/www/{{ app_name }};
+    index index.html;
+
+    # TaskFlow API on tf-app (private network)
+    location /api/ { proxy_pass http://tf-app:{{ app_port }}/; }
+
+    # SIS5: status page - own container image, published only on localhost
+    location /status/ { proxy_pass http://127.0.0.1:{{ status_port }}/; }
+}

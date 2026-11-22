@@ -1,0 +1,11 @@
+# the config is tested first; a broken config stops the play before nginx is reloaded
+- name: Test nginx config
+  ansible.builtin.command: nginx -t
+  changed_when: false
+  listen: Reload nginx
+
+- name: Reload nginx service
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
+  listen: Reload nginx

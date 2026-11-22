@@ -1,0 +1,78 @@
+# SIS1: FHS directory layout, service user and sample files (same as setup_fs.sh)
+- name: Service account taskflow (no login shell)
+  ansible.builtin.user:
+    name: "{{ app_user }}"
+    system: true
+    home: "/opt/{{ app_name }}"
+    create_home: false
+    shell: /usr/sbin/nologin
+
+- name: Common directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.owner }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { path: "/etc/{{ app_name }}",         owner: root,          mode: "0755" }   # configuration
+    - { path: "/var/log/{{ app_name }}",     owner: "{{ app_user }}", mode: "0750" } # logs
+    - { path: "/var/backups/{{ app_name }}", owner: root,          mode: "0700" }   # backups
+
+- name: Common configuration
+  ansible.builtin.template:
+    src: taskflow.conf.j2
+    dest: "/etc/{{ app_name }}/{{ app_name }}.conf"
+    mode: "0644"
+
+- name: Role directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.owner }}"
+    mode: "{{ item.mode }}"
+  loop: "{{ role_dirs[tf_role] }}"
+  vars:
+    role_dirs:
+      web:
+        - { path: "/var/www/{{ app_name }}",        owner: www-data, mode: "0755" }  # static front-end
+        - { path: "/var/www/{{ app_name }}/assets", owner: www-data, mode: "0755" }
+        - { path: "/etc/{{ app_name }}/nginx",      owner: root,     mode: "0755" }
+      app:
+        - { path: "/opt/{{ app_name }}",            owner: "{{ app_user }}", mode: "0755" }  # code
+        - { path: "/opt/{{ app_name }}/releases",   owner: "{{ app_user }}", mode: "0755" }  # releases
+        - { path: "/srv/{{ app_name }}",            owner: "{{ app_user }}", mode: "0750" }  # user data
+        - { path: "/srv/{{ app_name }}/uploads",    owner: "{{ app_user }}", mode: "0750" }
+        - { path: "/var/lib/{{ app_name }}",        owner: "{{ app_user }}", mode: "0750" }  # runtime data
+      db:
+        - { path: "/etc/{{ app_name }}/db",         owner: root, mode: "0755" }
+        - { path: "/var/backups/{{ app_name }}/db", owner: root, mode: "0700" }  # pg_dump output
+
+- name: Front-end page
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "/var/www/{{ app_name }}/index.html"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+  when: tf_role == 'web'
+
+- name: README for user uploads
+  ansible.builtin.copy:
+    dest: "/srv/{{ app_name }}/uploads/README.txt"
+    content: "User uploaded files are stored here.\n"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: "0640"
+  when: tf_role == 'app'
+
+- name: Database schema and backup script
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: init.sql,           dest: "/etc/{{ app_name }}/db/init.sql",          mode: "0644" }
+    - { src: taskflow-backup.sh, dest: "/usr/local/bin/{{ app_name }}-backup.sh", mode: "0755" }
+  when: tf_role == 'db'

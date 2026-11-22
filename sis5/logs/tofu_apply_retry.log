@@ -1,0 +1,105 @@
+== round 1, availability domain 1
+   2 Error: 500-InternalError, Out of host capacity.
+   1 oci_core_instance.server["tf-db"]: Creation complete after 36s 
+== round 1, availability domain 2
+   2 Error: 500-InternalError, Out of host capacity.
+== round 1, availability domain 3
+   2 Error: 500-InternalError, Out of host capacity.
+== round 2, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+   1 oci_core_instance.server["tf-web"]: Creation complete after 37s 
+== round 2, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 2, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 3, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 3, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 3, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 4, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 4, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 4, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 5, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 5, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 5, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 6, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 6, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 6, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 7, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 7, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 7, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 8, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 8, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 8, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 9, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 9, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 9, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 10, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 10, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 10, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 11, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 11, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 11, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 12, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 12, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 12, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 13, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 13, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 13, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 14, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 14, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 14, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 15, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 15, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 15, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 16, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 16, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 16, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 17, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 17, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 17, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 18, availability domain 1

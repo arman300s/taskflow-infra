@@ -1,0 +1,234 @@
+docker buildx inspect taskflow-builder >/dev/null 2>&1 || \
+	  docker buildx create --name taskflow-builder --driver docker-container
+taskflow-builder
+docker buildx build --builder taskflow-builder --platform linux/arm64,linux/amd64 \
+	  -t armanj8543foiun/taskflow-status:1.0.0 -t armanj8543foiun/taskflow-status:latest --push status-app
+#0 building with "taskflow-builder" instance using docker-container driver
+
+#1 [internal] booting buildkit
+#1 pulling image moby/buildkit:buildx-stable-1
+#1 pulling image moby/buildkit:buildx-stable-1 276.5s done
+#1 creating container buildx_buildkit_taskflow-builder0
+#1 creating container buildx_buildkit_taskflow-builder0 0.6s done
+#1 DONE 277.1s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 815B done
+#2 DONE 0.0s
+
+#3 [linux/arm64 internal] load metadata for docker.io/library/python:3.12-slim
+#3 ...
+
+#4 [auth] library/python:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#5 [linux/amd64 internal] load metadata for docker.io/library/python:3.12-slim
+#5 DONE 2.8s
+
+#3 [linux/arm64 internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 2.9s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 57B done
+#6 DONE 0.0s
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 resolve docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b 0.0s done
+#7 DONE 0.0s
+
+#8 [internal] load build context
+#8 transferring context: 4.35kB done
+#8 DONE 0.0s
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 resolve docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b 0.0s done
+#9 sha256:70b4f81c82dc6ea2a5fc08c59c75940cc3f45dad8e2038b7773cd1b6ac24c7a0 0B / 249B 0.2s
+#9 sha256:70b4f81c82dc6ea2a5fc08c59c75940cc3f45dad8e2038b7773cd1b6ac24c7a0 249B / 249B 0.3s done
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 0B / 12.06MB 0.2s
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 0B / 30.21MB 0.2s
+#9 sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 0B / 1.27MB 0.2s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 1.05MB / 12.06MB 2.1s
+#9 sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 1.05MB / 1.27MB 3.3s
+#9 sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 1.27MB / 1.27MB 3.7s done
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 2.10MB / 12.06MB 4.3s
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 1.05MB / 30.21MB 5.2s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 3.15MB / 12.06MB 6.9s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 4.19MB / 12.06MB 9.3s
+#9 ...
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 1.05MB / 12.12MB 9.6s
+#7 sha256:68bced9e0afa4479df17c3646e27c7c7e9ce9ba70c0e6c73b6826487b89037d9 1.29MB / 1.29MB 3.3s done
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 0B / 29.86MB 3.0s
+#7 ...
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 2.10MB / 30.21MB 10.3s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 5.24MB / 12.06MB 13.0s
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 4.19MB / 30.21MB 13.6s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 6.29MB / 12.06MB 18.0s
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 6.29MB / 30.21MB 18.3s
+#9 ...
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 2.10MB / 12.12MB 19.8s
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 3.15MB / 29.86MB 13.2s
+#7 ...
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 7.34MB / 12.06MB 21.2s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 8.39MB / 12.06MB 22.8s
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 7.34MB / 30.21MB 23.4s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 9.44MB / 12.06MB 25.0s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 10.49MB / 12.06MB 27.9s
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 8.39MB / 30.21MB 28.5s
+#9 ...
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 4.19MB / 12.12MB 30.0s
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 6.29MB / 29.86MB 23.4s
+#7 ...
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 10.49MB / 12.06MB 33.0s
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 9.44MB / 30.21MB 33.6s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 11.53MB / 12.06MB 34.5s
+#9 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 12.06MB / 12.06MB 38.1s done
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 11.53MB / 30.21MB 38.2s
+#9 ...
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 5.24MB / 12.12MB 39.6s
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 12.58MB / 29.86MB 33.0s
+#7 sha256:05e0eee5572e9c9f50408a2132590133b830a668a1cf2ff2b150f19c57707e2b 248B / 248B 0.4s done
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 14.68MB / 29.86MB 36.5s
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 6.29MB / 12.12MB 43.2s
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 16.78MB / 29.86MB 39.9s
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 6.29MB / 12.12MB 48.3s
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 7.34MB / 12.12MB 48.7s
+#7 ...
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 15.73MB / 30.21MB 49.9s
+#9 ...
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 18.87MB / 29.86MB 43.5s
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 8.39MB / 12.12MB 52.0s
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 9.15MB / 12.12MB 54.6s
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 19.92MB / 29.86MB 48.6s
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 10.49MB / 12.12MB 57.1s
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 22.02MB / 29.86MB 53.0s
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 11.53MB / 12.12MB 59.7s
+#7 ...
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 18.87MB / 30.21MB 60.1s
+#9 ...
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 12.12MB / 12.12MB 62.9s done
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 22.02MB / 29.86MB 58.0s
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 24.12MB / 29.86MB 62.2s
+#7 ...
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 22.02MB / 30.21MB 71.0s
+#9 ...
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 26.21MB / 29.86MB 67.1s
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 27.26MB / 29.86MB 72.3s
+#7 ...
+
+#10 [auth] library/python:pull token for registry-1.docker.io
+#10 DONE 0.0s
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 ...
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 23.07MB / 30.21MB 80.0s
+#9 ...
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 ...
+
+#11 [auth] library/python:pull token for registry-1.docker.io
+#11 DONE 0.0s
+
+#7 [linux/amd64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 29.36MB / 29.86MB 75.5s
+#7 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 29.86MB / 29.86MB 75.8s done
+#7 extracting sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41
+#7 extracting sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 0.4s done
+#7 extracting sha256:68bced9e0afa4479df17c3646e27c7c7e9ce9ba70c0e6c73b6826487b89037d9 0.0s done
+#7 extracting sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085
+#7 extracting sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 0.2s done
+#7 extracting sha256:05e0eee5572e9c9f50408a2132590133b830a668a1cf2ff2b150f19c57707e2b done
+#7 DONE 83.5s
+
+#12 [linux/amd64 2/4] RUN useradd --system --no-create-home --shell /usr/sbin/nologin app
+#12 DONE 0.3s
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 26.21MB / 30.21MB 83.6s
+#9 ...
+
+#13 [linux/amd64 3/4] WORKDIR /app
+#13 DONE 0.0s
+
+#14 [linux/amd64 4/4] COPY status_app.py .
+#14 DONE 0.0s
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 28.31MB / 30.21MB 84.4s
+#9 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 30.21MB / 30.21MB 85.6s done
+#9 extracting sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef
+#9 extracting sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 0.4s done
+#9 DONE 86.1s
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 extracting sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 0.0s done
+#9 extracting sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222
+#9 extracting sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 0.2s done
+#9 DONE 86.3s
+
+#9 [linux/arm64 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#9 extracting sha256:70b4f81c82dc6ea2a5fc08c59c75940cc3f45dad8e2038b7773cd1b6ac24c7a0 done
+#9 DONE 86.3s
+
+#15 [linux/arm64 2/4] RUN useradd --system --no-create-home --shell /usr/sbin/nologin app
+#15 DONE 0.2s
+
+#16 [linux/arm64 3/4] WORKDIR /app
+#16 DONE 0.0s
+
+#17 [linux/arm64 4/4] COPY status_app.py .
+#17 DONE 0.0s
+
+#18 exporting to image
+#18 exporting layers 0.1s done
+#18 exporting manifest sha256:1dbfd8ff5bcf77fa725a0e4fb39b4ff02a1fee4fe02e3365118c11fe35404be5 done
+#18 exporting config sha256:c5af18e49fd46cb38da74985ce7874b69c8655731efd97814490fb52901a7870 done
+#18 exporting attestation manifest sha256:cd99bdce562818161ac2df0a06d5fc362f666ff73a12178dee3f0347a6bf7992 done
+#18 exporting manifest sha256:54ab8c916e4b2350cef06fccddb3112b71dbaa1e9931127f4b6bb96aaf69e87f done
+#18 exporting config sha256:35df1ec45b22223f442114120a0104f59948001e5804b1fbf2df78d92b8bd0be done
+#18 exporting attestation manifest sha256:4571a4884116dfb7b4ccb96bb99790fa9d5012dd473d7bd124784dbb2db2774c done
+#18 exporting manifest list sha256:8caafff0f5223998e0fc2b4f3b04809c538508cb46d97ee75e467fbace603ff9 done
+#18 pushing layers
+#18 ...
+
+#19 [auth] armanj8543foiun/taskflow-status:pull,push token for registry-1.docker.io
+#19 DONE 0.0s
+
+#18 exporting to image
+#18 pushing layers 921.0s done
+#18 pushing manifest for docker.io/armanj8543foiun/taskflow-status:1.0.0@sha256:8caafff0f5223998e0fc2b4f3b04809c538508cb46d97ee75e467fbace603ff9
+#18 pushing manifest for docker.io/armanj8543foiun/taskflow-status:1.0.0@sha256:8caafff0f5223998e0fc2b4f3b04809c538508cb46d97ee75e467fbace603ff9 4.7s done
+#18 pushing layers 1.1s done
+#18 pushing manifest for docker.io/armanj8543foiun/taskflow-status:latest@sha256:8caafff0f5223998e0fc2b4f3b04809c538508cb46d97ee75e467fbace603ff9
+#18 pushing manifest for docker.io/armanj8543foiun/taskflow-status:latest@sha256:8caafff0f5223998e0fc2b4f3b04809c538508cb46d97ee75e467fbace603ff9 3.0s done
+#18 DONE 929.9s
+
+View build details: docker-desktop://dashboard/build/taskflow-builder/taskflow-builder0/qoiidn9n4jajub864pufqxj6g

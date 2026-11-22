@@ -1,0 +1,42 @@
+# TaskFlow – variables shared by all servers.
+# Secrets (passwords) are in vault.yml, encrypted with ansible-vault.
+
+timezone: Asia/Almaty
+private_net: 10.0.0.0/16
+
+# role of the server = its inventory group (web | app | db)
+tf_role: "{{ (group_names | intersect(['web', 'app', 'db'])) | first }}"
+
+app_name: taskflow
+app_user: taskflow
+app_port: 8000
+app_version: "1.1.0"
+db_name: taskflow
+db_user: taskflow
+db_password: "{{ vault_db_password }}"
+secret_key: "{{ vault_secret_key }}"
+
+base_packages: [vim, curl, git, htop, tree, net-tools, ufw, acl]
+
+# SIS3: a package from the default repository, from a new repository and a binary without apt
+default_repo_packages: [jq, fail2ban]
+pg_client_version: 18
+pg_server_version: 16
+node_exporter_version: "1.12.1"
+node_exporter_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+
+# SIS5: own container image (Docker Hub)
+status_image: "{{ dockerhub_user }}/taskflow-status"
+status_image_tag: "1.0.0"
+status_port: 8080
+dockerhub_user: armanj8543foiun
+
+# SIS2: roles and users
+role_groups: [tf-admins, tf-developers, tf-auditors, tf-automation]
+people:
+  - { name: tfadmin,   group: tf-admins,     groups: [],                     comment: TaskFlow administrator }
+  - { name: tfdev,     group: tf-developers, groups: [],                     comment: TaskFlow developer }
+  - { name: tfauditor, group: tf-auditors,   groups: [adm, systemd-journal], comment: TaskFlow auditor }
+temp_password: "{{ vault_temp_password }}"
+automation_user: automation_bot
+automation_pubkey: "{{ lookup('file', '~/.ssh/taskflow_automation_ed25519.pub') }}"

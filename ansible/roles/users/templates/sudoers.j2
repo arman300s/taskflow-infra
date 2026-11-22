@@ -1,0 +1,13 @@
+# TaskFlow role-based sudo rules (managed by Ansible)
+Cmnd_Alias TF_SERVICE = /usr/bin/systemctl start taskflow, /usr/bin/systemctl stop taskflow, \
+                        /usr/bin/systemctl restart taskflow, /usr/bin/systemctl --no-pager status taskflow
+Cmnd_Alias TF_NGINX   = /usr/sbin/nginx -t, /usr/bin/systemctl reload nginx
+Cmnd_Alias TF_LOGS    = /usr/bin/journalctl --no-pager -u taskflow, /usr/bin/journalctl --no-pager -u nginx, \
+                        /usr/bin/journalctl --no-pager -u postgresql
+Cmnd_Alias TF_AUDIT   = /usr/sbin/ufw status verbose, /usr/bin/lastb, /usr/bin/ss -tulpn, \
+                        /usr/bin/cat /etc/sudoers.d/taskflow
+
+%tf-admins     ALL=(ALL:ALL) ALL
+%tf-developers ALL=(root) TF_SERVICE, TF_NGINX, TF_LOGS
+%tf-auditors   ALL=(root) NOPASSWD: TF_AUDIT, TF_LOGS
+%tf-automation ALL=(root) NOPASSWD: TF_SERVICE, TF_NGINX, /usr/bin/systemctl daemon-reload

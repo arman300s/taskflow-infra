@@ -5,3 +5,10 @@
 .env
 __pycache__/
 .DS_Store
+
+# OpenTofu
+tofu/.terraform/
+tofu/*.tfstate*
+tofu/terraform.tfvars
+tofu/.terraform.tfstate.lock.info
+tofu/ssh_config
