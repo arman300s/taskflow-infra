@@ -1,0 +1,238 @@
+== round 1, availability domain 1
+   2 Error: 500-InternalError, Out of host capacity.
+   1 oci_core_instance.server["tf-db"]: Creation complete after 36s 
+== round 1, availability domain 2
+   2 Error: 500-InternalError, Out of host capacity.
+== round 1, availability domain 3
+   2 Error: 500-InternalError, Out of host capacity.
+== round 2, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+   1 oci_core_instance.server["tf-web"]: Creation complete after 37s 
+== round 2, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 2, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 3, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 3, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 3, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 4, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 4, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 4, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 5, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 5, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 5, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 6, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 6, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 6, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 7, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 7, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 7, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 8, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 8, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 8, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 9, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 9, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 9, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 10, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 10, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 10, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 11, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 11, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 11, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 12, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 12, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 12, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 13, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 13, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 13, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 14, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 14, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 14, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 15, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 15, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 15, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 16, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 16, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 16, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 17, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 17, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 17, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 18, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 18, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 18, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 19, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 19, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 19, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 20, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 20, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 20, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 21, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 21, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 21, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 22, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 22, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 22, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 23, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 23, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 23, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 24, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 24, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 24, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 25, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 25, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 25, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 26, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 26, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 26, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 27, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 27, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 27, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 28, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 28, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 28, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 29, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 29, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 29, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 30, availability domain 1
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.A1.Flex&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.E2.1.Micro&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/vcns/ocid1.vcn.oc1.eu-frankfurt-1.amaaaaaa4lgxpaaauea2mwormgf6jkwhfte4i7ddbfheazd2t3tkncw2rd5q": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://identity.eu-frankfurt-1.oci.oraclecloud.com/20160918/availabilityDomains?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua": dial tcp: lookup identity.eu-frankfurt-1.oci.oraclecloud.com: no such host
+== round 30, availability domain 2
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.A1.Flex&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.E2.1.Micro&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/vcns/ocid1.vcn.oc1.eu-frankfurt-1.amaaaaaa4lgxpaaauea2mwormgf6jkwhfte4i7ddbfheazd2t3tkncw2rd5q": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://identity.eu-frankfurt-1.oci.oraclecloud.com/20160918/availabilityDomains?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua": dial tcp: lookup identity.eu-frankfurt-1.oci.oraclecloud.com: no such host
+== round 30, availability domain 3
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.A1.Flex&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.E2.1.Micro&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/vcns/ocid1.vcn.oc1.eu-frankfurt-1.amaaaaaa4lgxpaaauea2mwormgf6jkwhfte4i7ddbfheazd2t3tkncw2rd5q": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://identity.eu-frankfurt-1.oci.oraclecloud.com/20160918/availabilityDomains?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua": dial tcp: lookup identity.eu-frankfurt-1.oci.oraclecloud.com: no such host
+== round 31, availability domain 1
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.A1.Flex&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.E2.1.Micro&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/vcns/ocid1.vcn.oc1.eu-frankfurt-1.amaaaaaa4lgxpaaauea2mwormgf6jkwhfte4i7ddbfheazd2t3tkncw2rd5q": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://identity.eu-frankfurt-1.oci.oraclecloud.com/20160918/availabilityDomains?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua": dial tcp: lookup identity.eu-frankfurt-1.oci.oraclecloud.com: no such host
+== round 31, availability domain 2
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.A1.Flex&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.E2.1.Micro&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/vcns/ocid1.vcn.oc1.eu-frankfurt-1.amaaaaaa4lgxpaaauea2mwormgf6jkwhfte4i7ddbfheazd2t3tkncw2rd5q": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://identity.eu-frankfurt-1.oci.oraclecloud.com/20160918/availabilityDomains?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua": dial tcp: lookup identity.eu-frankfurt-1.oci.oraclecloud.com: no such host
+== round 31, availability domain 3
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.A1.Flex&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/images?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua&operatingSystem=Canonical+Ubuntu&operatingSystemVersion=24.04&shape=VM.Standard.E2.1.Micro&sortBy=TIMECREATED&sortOrder=DESC": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://iaas.eu-frankfurt-1.oraclecloud.com/20160918/vcns/ocid1.vcn.oc1.eu-frankfurt-1.amaaaaaa4lgxpaaauea2mwormgf6jkwhfte4i7ddbfheazd2t3tkncw2rd5q": dial tcp: lookup iaas.eu-frankfurt-1.oraclecloud.com: no such host
+   1 Error: Get "https://identity.eu-frankfurt-1.oci.oraclecloud.com/20160918/availabilityDomains?compartmentId=ocid1.tenancy.oc1..aaaaaaaahaqxboug65663jk2yny5foadykcjcnshm45fydfczindbajyumua": dial tcp: lookup identity.eu-frankfurt-1.oci.oraclecloud.com: no such host
+== round 32, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 32, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 32, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 33, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 33, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 33, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 34, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 34, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 34, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 35, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 35, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 35, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+== round 36, availability domain 1
+   1 Error: 500-InternalError, Out of host capacity.
+== round 36, availability domain 2
+   1 Error: 500-InternalError, Out of host capacity.
+== round 36, availability domain 3
+   1 Error: 500-InternalError, Out of host capacity.
+
+[killed]

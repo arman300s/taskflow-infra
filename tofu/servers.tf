@@ -1,10 +1,16 @@
+locals {
+  # servers that get an own VM, and the VM every role (inventory host) lives on
+  vms     = { for name, s in var.servers : name => s if s.host_on == null }
+  vm_name = { for name, s in var.servers : name => coalesce(s.host_on, name) }
+}
+
 data "oci_identity_availability_domains" "ads" {
   compartment_id = var.compartment_ocid
 }
 
 # newest official Canonical Ubuntu 24.04 image for every shape in use (ARM and x86 builds differ)
 data "oci_core_images" "ubuntu" {
-  for_each                 = toset([for s in var.servers : s.shape])
+  for_each                 = toset([for s in local.vms : s.shape])
   compartment_id           = var.compartment_ocid
   operating_system         = "Canonical Ubuntu"
   operating_system_version = "24.04"
@@ -14,7 +20,7 @@ data "oci_core_images" "ubuntu" {
 }
 
 resource "oci_core_instance" "server" {
-  for_each = var.servers
+  for_each = local.vms
 
   compartment_id      = var.compartment_ocid
   availability_domain = data.oci_identity_availability_domains.ads.availability_domains[coalesce(each.value.ad, var.ad_number) - 1].name
@@ -60,11 +66,14 @@ resource "local_file" "inventory" {
   filename        = "${path.module}/../ansible/inventory/hosts.yml"
   file_permission = "0644"
   content = templatefile("${path.module}/inventory.tftpl", {
+    roles = { for name, s in var.servers : name => s.role }
     servers = {
       for name, s in var.servers : name => {
-        role       = s.role
-        public_ip  = oci_core_instance.server[name].public_ip
-        private_ip = oci_core_instance.server[name].private_ip
+        public_ip  = oci_core_instance.server[local.vm_name[name]].public_ip
+        private_ip = oci_core_instance.server[local.vm_name[name]].private_ip
+        host_on    = s.host_on
+        # all roles that share the VM (e.g. web + app on tf-web)
+        node_roles = [for n, o in var.servers : o.role if local.vm_name[n] == local.vm_name[name]]
       }
     }
     ssh_key = trimsuffix(var.ssh_public_key_path, ".pub")
@@ -77,7 +86,7 @@ resource "local_file" "ssh_config" {
   file_permission = "0644"
   content = join("\n", [for name, s in var.servers : <<-EOT
     Host ${name}
-        HostName ${oci_core_instance.server[name].public_ip}
+        HostName ${oci_core_instance.server[local.vm_name[name]].public_ip}
         User ubuntu
         IdentityFile ${trimsuffix(var.ssh_public_key_path, ".pub")}
         StrictHostKeyChecking accept-new

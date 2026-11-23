@@ -1,0 +1,252 @@
+
+PLAY [Smoke tests of every part] ***********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : Collect service state] *******************************************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : common | timezone and hostname] **********************************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : common | /etc/hosts: every server name -> its private IP] ********
+ok: [tf-db] => (item=tf-app)
+ok: [tf-db] => (item=tf-db)
+ok: [tf-db] => (item=tf-web)
+ok: [tf-web] => (item=tf-app)
+ok: [tf-app] => (item=tf-app)
+ok: [tf-web] => (item=tf-db)
+ok: [tf-app] => (item=tf-db)
+ok: [tf-web] => (item=tf-web)
+ok: [tf-app] => (item=tf-web)
+
+TASK [smoke : filesystem | directories of the role exist with the right owner and mode] ***
+ok: [tf-db] => (item=/var/backups/taskflow/db)
+ok: [tf-db] => (item=/usr/local/bin/taskflow-backup.sh)
+ok: [tf-web] => (item=/var/www/taskflow)
+ok: [tf-app] => (item=/opt/taskflow)
+ok: [tf-web] => (item=/etc/taskflow)
+ok: [tf-app] => (item=/srv/taskflow)
+ok: [tf-app] => (item=/etc/taskflow/app.env)
+
+TASK [smoke : users | role groups and users exist, bot has no password] ********
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : users | sudoers valid, bot may restart only taskflow] ************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : users | sshd: no root login, no passwords] ***********************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : users | developer can write code but cannot read user data (tf-app)] ***
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : packages | jq, fail2ban (apt) and node_exporter (binary) installed] ***
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : packages | psql 18 from apt.postgresql.org (tf-app)] *************
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : services | required services are running and enabled] ************
+ok: [tf-web] => (item=fail2ban)
+ok: [tf-app] => (item=fail2ban)
+ok: [tf-db] => (item=fail2ban)
+ok: [tf-web] => (item=node_exporter)
+ok: [tf-web] => (item=nginx)
+ok: [tf-app] => (item=node_exporter)
+ok: [tf-web] => (item=docker)
+ok: [tf-app] => (item=taskflow)
+ok: [tf-db] => (item=node_exporter)
+[ERROR]: Task failed: Action failed: Assertion failed
+Origin: /Users/armansojbek/Desktop/ldoc/taskflow-infra/ansible/roles/smoke/tasks/main.yml:71:3
+
+69
+70 # ---------- services
+71 - name: "services | required services are running and enabled"
+     ^ column 3
+
+failed: [tf-db] (item=postgresql@16-main) => 
+    ansible_loop_var: item
+    assertion: ansible_facts.services[item ~ '.service'].status in ['enabled', 'enabled-runtime']
+    changed: false
+    evaluated_to: false
+    item: postgresql@16-main
+    msg: Assertion failed
+
+TASK [smoke : services | SSH listening (socket-activated on Ubuntu 24.04)] *****
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : firewall | UFW active, SSH rate-limited, only the role ports open] ***
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : firewall | fail2ban sshd jail active] ****************************
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : network | tf-web -> tf-app:8000 API health] **********************
+skipping: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : network | tf-web -> every server :9100 metrics (private)] ********
+skipping: [tf-app] => (item=tf-app) 
+skipping: [tf-app] => (item=tf-db) 
+skipping: [tf-app] => (item=tf-web) 
+skipping: [tf-app]
+ok: [tf-web] => (item=tf-app)
+ok: [tf-web] => (item=tf-db)
+ok: [tf-web] => (item=tf-web)
+
+TASK [smoke : network | tf-app -> tf-db:5432 SQL query as taskflow] ************
+skipping: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : container | taskflow-status healthy (tf-web)] ********************
+skipping: [tf-app]
+[ERROR]: Task failed: Action failed: A 'failed_when' expression evaluated to 'True'.
+Origin: /Users/armansojbek/Desktop/ldoc/taskflow-infra/ansible/roles/smoke/tasks/main.yml:129:3
+
+127   when: tf_role == 'app'
+128
+129 - name: "container | taskflow-status healthy (tf-web)"
+      ^ column 3
+
+fatal: [tf-web]: FAILED! => 
+    changed: false
+    content: '{"service": "taskflow-status", "version": "1.0.0", "time": "2026-11-23 09:05:16",
+        "api": {"up": false, "error": "URLError"}, "nodes": [{"node": "tf-app", "up":
+        true, "load1": 1.09, "mem_used_pct": 38.7, "uptime_h": 14.5}, {"node": "tf-db",
+        "up": true, "load1": 0.11, "mem_used_pct": 31.6, "uptime_h": 14.6}, {"node": "tf-web",
+        "up": true, "load1": 1.09, "mem_used_pct": 38.7, "uptime_h": 14.5}]}'
+    content_length: '395'
+    content_type: application/json
+    cookies: {}
+    cookies_string: ''
+    date: Mon, 23 Nov 2026 09:05:16 GMT
+    elapsed: 3
+    failed_when_result: true
+    json:
+        api:
+            error: URLError
+            up: false
+        nodes:
+        -   load1: 1.09
+            mem_used_pct: 38.7
+            node: tf-app
+            up: true
+            uptime_h: 14.5
+        -   load1: 0.11
+            mem_used_pct: 31.6
+            node: tf-db
+            up: true
+            uptime_h: 14.6
+        -   load1: 1.09
+            mem_used_pct: 38.7
+            node: tf-web
+            up: true
+            uptime_h: 14.5
+        service: taskflow-status
+        time: '2026-11-23 09:05:16'
+        version: 1.0.0
+    msg: OK (395 bytes)
+    redirected: false
+    server: BaseHTTP/0.6 Python/3.12.16
+    status: 200
+    url: http://127.0.0.1:8080/api/status
+
+TASK [smoke : internet | public paths work] ************************************
+ok: [tf-app -> localhost] => (item=GET /)
+[ERROR]: Task failed: Module failed: Status code was 502 and not [200]: HTTP Error 502: Bad Gateway
+Origin: /Users/armansojbek/Desktop/ldoc/taskflow-infra/ansible/roles/smoke/tasks/main.yml:138:3
+
+136
+137 # ---------- network: from the internet (runs on the laptop)
+138 - name: "internet | public paths work"
+      ^ column 3
+
+failed: [tf-app -> localhost] (item=GET /api/health) => 
+    ansible_loop_var: item
+    changed: false
+    connection: close
+    content: |-
+        <html>
+        <head><title>502 Bad Gateway</title></head>
+        <body>
+        <center><h1>502 Bad Gateway</h1></center>
+        <hr><center>nginx/1.24.0 (Ubuntu)</center>
+        </body>
+        </html>
+    content_length: '166'
+    content_type: text/html
+    date: Mon, 23 Nov 2026 09:05:21 GMT
+    elapsed: 3
+    item:
+        code: 200
+        method: GET
+        path: /api/health
+    msg: 'Status code was 502 and not [200]: HTTP Error 502: Bad Gateway'
+    redirected: false
+    server: nginx/1.24.0 (Ubuntu)
+    status: 502
+    url: http://92.5.167.226/api/health
+[ERROR]: Task failed: Module failed: Status code was 502 and not [201]: HTTP Error 502: Bad Gateway
+Origin: /Users/armansojbek/Desktop/ldoc/taskflow-infra/ansible/roles/smoke/tasks/main.yml:138:3
+
+136
+137 # ---------- network: from the internet (runs on the laptop)
+138 - name: "internet | public paths work"
+      ^ column 3
+
+failed: [tf-app -> localhost] (item=POST /api/tasks) => 
+    ansible_loop_var: item
+    changed: false
+    connection: close
+    content: |-
+        <html>
+        <head><title>502 Bad Gateway</title></head>
+        <body>
+        <center><h1>502 Bad Gateway</h1></center>
+        <hr><center>nginx/1.24.0 (Ubuntu)</center>
+        </body>
+        </html>
+    content_length: '166'
+    content_type: text/html
+    date: Mon, 23 Nov 2026 09:05:24 GMT
+    elapsed: 3
+    item:
+        body: '{"title": "ansible smoke test"}'
+        code: 201
+        method: POST
+        path: /api/tasks
+    msg: 'Status code was 502 and not [201]: HTTP Error 502: Bad Gateway'
+    redirected: false
+    server: nginx/1.24.0 (Ubuntu)
+    status: 502
+    url: http://92.5.167.226/api/tasks
+ok: [tf-app -> localhost] => (item=GET /status/)
+
+PLAY RECAP *********************************************************************
+tf-app                     : ok=16   changed=0    unreachable=0    failed=1    skipped=3    rescued=0    ignored=0   
+tf-db                      : ok=9    changed=0    unreachable=0    failed=1    skipped=2    rescued=0    ignored=0   
+tf-web                     : ok=15   changed=0    unreachable=0    failed=1    skipped=3    rescued=0    ignored=0   
+

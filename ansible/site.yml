@@ -13,6 +13,8 @@
 - name: Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)
   hosts: all
   become: true
+  # one inventory host after the other: two roles can share a VM (tf-app on tf-web)
+  serial: 1
   roles:
     - { role: common,     tags: [common, sis1] }
     - { role: filesystem, tags: [filesystem, sis1] }

@@ -8,8 +8,8 @@ all:
     ${role}:
       hosts:
 %{ for name, s in servers ~}
-%{ if s.role == role ~}
-        ${name}: { ansible_host: ${s.public_ip}, private_ip: ${s.private_ip} }
+%{ if roles[name] == role ~}
+        ${name}: { ansible_host: ${s.public_ip}, private_ip: ${s.private_ip}, node_roles: [${join(", ", s.node_roles)}]%{ if s.host_on != null }, host_on: ${s.host_on}%{ endif } }
 %{ endif ~}
 %{ endfor ~}
 %{ endfor ~}

@@ -5,8 +5,9 @@ server {
     root /var/www/{{ app_name }};
     index index.html;
 
-    # TaskFlow API on tf-app (private network)
-    location /api/ { proxy_pass http://tf-app:{{ app_port }}/; }
+    # TaskFlow API on tf-app (private network). The private IP from the inventory is used,
+    # because Nginx resolves host names only once at start and would keep an old address.
+    location /api/ { proxy_pass http://{{ hostvars[groups['app'][0]].private_ip }}:{{ app_port }}/; }
 
     # SIS5: status page - own container image, published only on localhost
     location /status/ { proxy_pass http://127.0.0.1:{{ status_port }}/; }

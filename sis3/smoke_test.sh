@@ -8,6 +8,8 @@ set -uo pipefail
 INV="$(dirname "$0")/../ansible/inventory/hosts.yml"
 ip_of() { sed -n "s/^ *$1: { ansible_host: \([0-9.]*\).*/\1/p" "$INV"; }
 WEB_IP=$(ip_of tf-web); APP_IP=$(ip_of tf-app); DB_IP=$(ip_of tf-db)
+# VM a role lives on (tf-app may run on the tf-web VM: host_on in the inventory)
+vm_of() { v=$(sed -n "s/^ *$1: {.*host_on: \([a-z-]*\).*/\1/p" "$INV"); echo "${v:-$1}"; }
 PASS=0; FAIL=0
 if [[ -t 1 ]]; then G=$'\e[32m'; R=$'\e[31m'; B=$'\e[1m'; N=$'\e[0m'; else G=; R=; B=; N=; fi
 
@@ -23,7 +25,7 @@ export -f closed
 
 echo "${B}== 1. Servers reachable over SSH${N}"
 for h in tf-web tf-app tf-db; do
-  check "$h: SSH login" "ssh -o ConnectTimeout=8 $h hostname | grep -x $h"
+  check "$h: SSH login" "ssh -o ConnectTimeout=8 $h hostname | grep -x $(vm_of $h)"
 done
 
 echo "${B}== 2. Packages (default repo / new repo / binary)${N}"

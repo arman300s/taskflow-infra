@@ -27,10 +27,12 @@
     proto: tcp
     from_ip: "{{ item.src }}"
     comment: "{{ item.comment }}"
-  loop: "{{ role_ports[tf_role] + [metrics] }}"
+  loop: "{{ role_ports[tf_role] + [metrics] + (colocated_api if tf_role == 'app' and 'web' in node_roles else []) }}"
   loop_control: { label: "{{ item.port }} from {{ item.src }}" }
   vars:
     metrics: { port: "9100", src: "{{ private_net }}", comment: node_exporter metrics - private }
+    # API on the same VM as the status container: the container comes from the Docker network
+    colocated_api: [{ port: "8000", src: 172.17.0.0/16, comment: TaskFlow API - from status container }]
     role_ports:
       web: [{ port: "80",   src: any,              comment: HTTP - Nginx, public },
             # the status container (Docker bridge network) reads the metrics of its own host

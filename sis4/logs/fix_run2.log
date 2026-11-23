@@ -1,0 +1,253 @@
+
+PLAY [Wait until new servers accept SSH] ***************************************
+
+TASK [Wait for SSH / cloud-init] ***********************************************
+[WARNING]: Failed to reset connection: Control socket connect(/Users/armansojbek/.ansible/cp/a60a962ec1): No such file or directory
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+PLAY [Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-web]
+
+TASK [firewall : Default policies] *********************************************
+ok: [tf-web] => (item={'dir': 'incoming', 'policy': 'deny'})
+ok: [tf-web] => (item={'dir': 'outgoing', 'policy': 'allow'})
+ok: [tf-web] => (item={'dir': 'routed', 'policy': 'deny'})
+
+TASK [firewall : SSH open to the world but rate-limited (6 new connections / 30 s per IP)] ***
+ok: [tf-web]
+
+TASK [firewall : Remove a plain (not limited) SSH rule if it exists] ***********
+ok: [tf-web]
+
+TASK [firewall : Service ports of this role] ***********************************
+ok: [tf-web] => (item=80 from any)
+ok: [tf-web] => (item=9100 from 172.17.0.0/16)
+ok: [tf-web] => (item=9100 from 10.0.0.0/16)
+
+TASK [firewall : Enable UFW] ***************************************************
+ok: [tf-web]
+
+TASK [firewall : fail2ban - ban SSH brute force for 1 hour] ********************
+ok: [tf-web]
+
+TASK [firewall : fail2ban enabled and running] *********************************
+ok: [tf-web]
+
+PLAY [Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-app]
+
+TASK [firewall : Default policies] *********************************************
+ok: [tf-app] => (item={'dir': 'incoming', 'policy': 'deny'})
+ok: [tf-app] => (item={'dir': 'outgoing', 'policy': 'allow'})
+ok: [tf-app] => (item={'dir': 'routed', 'policy': 'deny'})
+
+TASK [firewall : SSH open to the world but rate-limited (6 new connections / 30 s per IP)] ***
+ok: [tf-app]
+
+TASK [firewall : Remove a plain (not limited) SSH rule if it exists] ***********
+ok: [tf-app]
+
+TASK [firewall : Service ports of this role] ***********************************
+ok: [tf-app] => (item=8000 from 10.0.0.0/16)
+ok: [tf-app] => (item=9100 from 10.0.0.0/16)
+changed: [tf-app] => (item=8000 from 172.17.0.0/16)
+
+TASK [firewall : Enable UFW] ***************************************************
+ok: [tf-app]
+
+TASK [firewall : fail2ban - ban SSH brute force for 1 hour] ********************
+ok: [tf-app]
+
+TASK [firewall : fail2ban enabled and running] *********************************
+ok: [tf-app]
+
+PLAY [Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+
+TASK [firewall : Default policies] *********************************************
+ok: [tf-db] => (item={'dir': 'incoming', 'policy': 'deny'})
+ok: [tf-db] => (item={'dir': 'outgoing', 'policy': 'allow'})
+ok: [tf-db] => (item={'dir': 'routed', 'policy': 'deny'})
+
+TASK [firewall : SSH open to the world but rate-limited (6 new connections / 30 s per IP)] ***
+ok: [tf-db]
+
+TASK [firewall : Remove a plain (not limited) SSH rule if it exists] ***********
+ok: [tf-db]
+
+TASK [firewall : Service ports of this role] ***********************************
+ok: [tf-db] => (item=5432 from 10.0.0.0/16)
+ok: [tf-db] => (item=9100 from 10.0.0.0/16)
+
+TASK [firewall : Enable UFW] ***************************************************
+ok: [tf-db]
+
+TASK [firewall : fail2ban - ban SSH brute force for 1 hour] ********************
+ok: [tf-db]
+
+TASK [firewall : fail2ban enabled and running] *********************************
+ok: [tf-db]
+
+PLAY [Database server] *********************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+
+PLAY [Application server] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-app]
+
+PLAY [Web server] **************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-web]
+
+PLAY [Smoke tests of every part] ***********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : Collect service state] *******************************************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : common | timezone and hostname] **********************************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : common | /etc/hosts: every server name -> its private IP] ********
+ok: [tf-db] => (item=tf-app)
+ok: [tf-app] => (item=tf-app)
+ok: [tf-web] => (item=tf-app)
+ok: [tf-db] => (item=tf-db)
+ok: [tf-db] => (item=tf-web)
+ok: [tf-app] => (item=tf-db)
+ok: [tf-web] => (item=tf-db)
+ok: [tf-app] => (item=tf-web)
+ok: [tf-web] => (item=tf-web)
+
+TASK [smoke : filesystem | directories of the role exist with the right owner and mode] ***
+ok: [tf-db] => (item=/var/backups/taskflow/db)
+ok: [tf-app] => (item=/opt/taskflow)
+ok: [tf-web] => (item=/var/www/taskflow)
+ok: [tf-db] => (item=/usr/local/bin/taskflow-backup.sh)
+ok: [tf-app] => (item=/srv/taskflow)
+ok: [tf-web] => (item=/etc/taskflow)
+ok: [tf-app] => (item=/etc/taskflow/app.env)
+
+TASK [smoke : users | role groups and users exist, bot has no password] ********
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : users | sudoers valid, bot may restart only taskflow] ************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : users | sshd: no root login, no passwords] ***********************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : users | developer can write code but cannot read user data (tf-app)] ***
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : packages | jq, fail2ban (apt) and node_exporter (binary) installed] ***
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : packages | psql 18 from apt.postgresql.org (tf-app)] *************
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : services | required services are running and enabled] ************
+ok: [tf-web] => (item=fail2ban)
+ok: [tf-app] => (item=fail2ban)
+ok: [tf-db] => (item=fail2ban)
+ok: [tf-web] => (item=node_exporter)
+ok: [tf-app] => (item=node_exporter)
+ok: [tf-web] => (item=nginx)
+ok: [tf-app] => (item=taskflow)
+ok: [tf-web] => (item=docker)
+ok: [tf-db] => (item=node_exporter)
+ok: [tf-db] => (item=postgresql@16-main)
+
+TASK [smoke : services | SSH listening (socket-activated on Ubuntu 24.04)] *****
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : firewall | UFW active, SSH rate-limited, only the role ports open] ***
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : firewall | fail2ban sshd jail active] ****************************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : network | tf-web -> tf-app:8000 API health] **********************
+skipping: [tf-app]
+skipping: [tf-db]
+ok: [tf-web]
+
+TASK [smoke : network | tf-web -> every server :9100 metrics (private)] ********
+skipping: [tf-app] => (item=tf-app) 
+skipping: [tf-app] => (item=tf-db) 
+skipping: [tf-app] => (item=tf-web) 
+skipping: [tf-db] => (item=tf-app) 
+skipping: [tf-app]
+skipping: [tf-db] => (item=tf-db) 
+skipping: [tf-db] => (item=tf-web) 
+skipping: [tf-db]
+ok: [tf-web] => (item=tf-app)
+ok: [tf-web] => (item=tf-db)
+ok: [tf-web] => (item=tf-web)
+
+TASK [smoke : network | tf-app -> tf-db:5432 SQL query as taskflow] ************
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : container | taskflow-status healthy (tf-web)] ********************
+skipping: [tf-app]
+skipping: [tf-db]
+ok: [tf-web]
+
+TASK [smoke : internet | public paths work] ************************************
+ok: [tf-web -> localhost] => (item=GET /)
+ok: [tf-web -> localhost] => (item=GET /api/health)
+ok: [tf-web -> localhost] => (item=POST /api/tasks)
+ok: [tf-web -> localhost] => (item=GET /status/)
+
+TASK [smoke : internet | private ports are closed from outside] ****************
+ok: [tf-web -> localhost] => (item=tf-app:8000 must be closed)
+ok: [tf-web -> localhost] => (item=tf-app:9100 must be closed)
+ok: [tf-web -> localhost] => (item=tf-db:5432 must be closed)
+ok: [tf-web -> localhost] => (item=tf-db:9100 must be closed)
+ok: [tf-web -> localhost] => (item=tf-web:9100 must be closed)
+
+PLAY RECAP *********************************************************************
+tf-app                     : ok=26   changed=1    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   
+tf-db                      : ok=23   changed=0    unreachable=0    failed=0    skipped=6    rescued=0    ignored=0   
+tf-web                     : ok=28   changed=0    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   
+

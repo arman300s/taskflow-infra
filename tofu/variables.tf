@@ -41,19 +41,23 @@ variable "servers" {
   description = "The TaskFlow servers: role, fixed private IP, shape and size"
   type = map(object({
     role       = string
-    private_ip = string
-    shape      = string
+    host_on    = optional(string) # run this role on another server instead of an own VM
+    private_ip = optional(string)
+    shape      = optional(string)
     ocpus      = optional(number) # only for Flex shapes
     memory_gb  = optional(number)
-    disk_gb    = number
+    disk_gb    = optional(number, 50)
     ad         = optional(number) # pinned availability domain, null = var.ad_number
   }))
   # Always Free limits of this tenancy (checked with oci_limits_limit_values):
   #   VM.Standard.A1.Flex (Ampere ARM) - 2 OCPU in total
   #   VM.Standard.E2.1.Micro (AMD x86, 1 OCPU / 1 GB) - 2 servers, only in AD-2
+  # Frankfurt has had no free A1 capacity ("Out of host capacity"), so the API role runs on
+  # tf-web. When A1 is available again, use the commented line to give tf-app its own VM.
   default = {
-    tf-web = { role = "web", private_ip = "10.0.0.21",  shape = "VM.Standard.E2.1.Micro", disk_gb = 50, ad = 2 }
-    tf-app = { role = "app", private_ip = "10.0.0.209", shape = "VM.Standard.A1.Flex",    ocpus = 1, memory_gb = 6,  disk_gb = 50 }
-    tf-db  = { role = "db",  private_ip = "10.0.0.165", shape = "VM.Standard.E2.1.Micro", disk_gb = 50, ad = 2 }
+    tf-web = { role = "web", private_ip = "10.0.0.21",  shape = "VM.Standard.E2.1.Micro", ad = 2 }
+    tf-app = { role = "app", host_on = "tf-web" }
+    # tf-app = { role = "app", private_ip = "10.0.0.209", shape = "VM.Standard.A1.Flex", ocpus = 1, memory_gb = 6 }
+    tf-db  = { role = "db",  private_ip = "10.0.0.165", shape = "VM.Standard.E2.1.Micro", ad = 2 }
   }
 }

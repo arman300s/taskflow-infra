@@ -1,7 +1,7 @@
 # SIS1: base configuration of every server (same as cloud-init.yaml / oracle/provision_base.sh)
 - name: Hostname
   ansible.builtin.hostname:
-    name: "{{ inventory_hostname }}"
+    name: "{{ node_name }}"
 
 - name: Timezone
   community.general.timezone:
@@ -74,4 +74,4 @@
 - name: Message of the day
   ansible.builtin.copy:
     dest: /etc/motd
-    content: "TaskFlow node {{ inventory_hostname }} ({{ tf_role }}) - managed by Ansible\n"
+    content: "TaskFlow node {{ node_name }} ({{ node_roles | join(', ') }}) - managed by Ansible\n"

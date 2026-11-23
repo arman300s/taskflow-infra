@@ -50,6 +50,33 @@ into `oracle/.env` (git-ignored).
 | tf-app | 92.5.88.31 | 10.0.0.209 | 22 (limit); 8000, 9100 private |
 | tf-db | 130.61.232.1 | 10.0.0.165 | 22 (limit); 5432, 9100 private |
 
+## One button (SIS6)
+
+```bash
+make up        # OpenTofu: network + VMs  ->  Ansible: full setup + smoke tests
+make test      # smoke tests only
+make down      # destroy all VMs and the network
+make rebuild   # down + up - the demo from scratch
+make image     # build armanj8543foiun/taskflow-status (arm64 + amd64) and push to Docker Hub
+```
+
+Needs `~/.oci/config` (OCI API key), `tofu/terraform.tfvars` (see the `.example`),
+the vault password in `~/.ansible/taskflow_vault_pass` and `ansible-galaxy collection install -r ansible/requirements.yml`.
+
+## SIS4 – Ansible (`ansible/`)
+
+`site.yml` builds everything of SIS1–SIS3 from plain Ubuntu 24.04 VMs with 10 roles
+(common, filesystem, users, packages, firewall, postgresql, taskflow_api, nginx, status_app, smoke)
+and ends with the smoke tests (`smoke.yml` runs them alone). Secrets: `group_vars/all/vault.yml` (ansible-vault).
+
+## SIS5 – container image and OpenTofu (`status-app/`, `tofu/`)
+
+- `status-app/` – new app *taskflow-status* (status page of API and servers), non-root image with HEALTHCHECK,
+  published as `armanj8543foiun/taskflow-status:1.0.0`, run on tf-web by Ansible behind Nginx at `/status/`.
+- `tofu/` – OCI VCN, subnet, internet gateway, route table, security list and the VMs (Always Free E2.1.Micro),
+  generates `ansible/inventory/hosts.yml` and `tofu/ssh_config`. `apply_retry.sh` retries "Out of host capacity".
+  The app role runs on the tf-web VM (`host_on`); the commented line in `variables.tf` gives tf-app its own A1 VM.
+
 ## Usage
 ```bash
 sudo snap install multipass

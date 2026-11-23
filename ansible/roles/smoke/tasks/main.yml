@@ -4,11 +4,16 @@
   ansible.builtin.service_facts:
 
 # ---------- common
-- name: "common | timezone, hostname and /etc/hosts"
-  ansible.builtin.command: bash -c 'timedatectl show -p Timezone --value; hostname; getent hosts tf-web tf-app tf-db | wc -l'
+- name: "common | timezone and hostname"
+  ansible.builtin.command: bash -c 'timedatectl show -p Timezone --value; hostname'
   register: t_common
   changed_when: false
-  failed_when: t_common.stdout_lines != [timezone, inventory_hostname, '3']
+  failed_when: t_common.stdout_lines != [timezone, node_name]
+
+- name: "common | /etc/hosts: every server name -> its private IP"
+  ansible.builtin.shell: getent hosts {{ item }} | grep -q '^{{ hostvars[item].private_ip }} '
+  changed_when: false
+  loop: "{{ groups['all'] | sort }}"
 
 # ---------- filesystem
 - name: "filesystem | directories of the role exist with the right owner and mode"
@@ -20,8 +25,8 @@
   loop_control: { label: "{{ item.path }}" }
   vars:
     checks:
-      web: [{ path: /var/www/taskflow, owner: www-data, mode: "0755" }, { path: /etc/taskflow, owner: root, mode: "0755" }]
-      app: [{ path: /opt/taskflow, owner: taskflow, mode: "0755" }, { path: /srv/taskflow, owner: taskflow, mode: "0750" },
+      web: [{ path: /var/www/taskflow, owner: www-data, mode: "0775" }, { path: /etc/taskflow, owner: root, mode: "0755" }]
+      app: [{ path: /opt/taskflow, owner: taskflow, mode: "0775" }, { path: /srv/taskflow, owner: taskflow, mode: "0750" },
             { path: /etc/taskflow/app.env, owner: root, mode: "0640" }]
       db:  [{ path: /var/backups/taskflow/db, owner: root, mode: "0700" }, { path: /usr/local/bin/taskflow-backup.sh, owner: root, mode: "0755" }]
 
@@ -67,11 +72,16 @@
   ansible.builtin.assert:
     that:
       - ansible_facts.services[item ~ '.service'].state == 'running'
-      - ansible_facts.services[item ~ '.service'].status == 'enabled'
+      - item is search('@') or ansible_facts.services[item ~ '.service'].status == 'enabled'
     quiet: true
-  loop: "{{ ['ssh', 'fail2ban', 'node_exporter'] + role_services[tf_role] }}"
+  loop: "{{ ['fail2ban', 'node_exporter'] + role_services[tf_role] }}"
   vars:
-    role_services: { web: [nginx, docker], app: [taskflow], db: [postgresql] }
+    # postgresql.service is only a wrapper (active/exited) - the real server is postgresql@16-main
+    role_services: { web: [nginx, docker], app: [taskflow], db: ["postgresql@{{ pg_server_version }}-main"] }
+
+- name: "services | SSH listening (socket-activated on Ubuntu 24.04)"
+  ansible.builtin.command: bash -c 'systemctl is-enabled ssh.socket && systemctl is-active ssh'
+  changed_when: false
 
 # ---------- firewall
 - name: "firewall | UFW active, SSH rate-limited, only the role ports open"

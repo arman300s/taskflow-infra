@@ -1,0 +1,256 @@
+
+PLAY [Wait until new servers accept SSH] ***************************************
+
+TASK [Wait for SSH / cloud-init] ***********************************************
+[WARNING]: Failed to reset connection: Control socket connect(/Users/armansojbek/.ansible/cp/a60a962ec1): No such file or directory
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+PLAY [Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-web]
+
+PLAY [Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-app]
+
+PLAY [Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+
+PLAY [Database server] *********************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+
+PLAY [Application server] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-app]
+
+PLAY [Web server] **************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-web]
+
+TASK [nginx : Nginx] ***********************************************************
+ok: [tf-web]
+
+TASK [nginx : TaskFlow site config] ********************************************
+changed: [tf-web]
+
+TASK [nginx : Enable the site, disable the default one] ************************
+ok: [tf-web] => (item={'name': 'taskflow', 'state': 'link', 'src': '/etc/taskflow/nginx/taskflow.conf'})
+ok: [tf-web] => (item={'name': 'default', 'state': 'absent'})
+
+TASK [nginx : Nginx enabled and running] ***************************************
+ok: [tf-web]
+
+TASK [status_app : Docker engine and Python SDK for Ansible] *******************
+ok: [tf-web]
+
+TASK [status_app : Docker enabled and running] *********************************
+ok: [tf-web]
+
+TASK [status_app : taskflow-status container (published on localhost only, Nginx proxies /status/)] ***
+ok: [tf-web]
+
+RUNNING HANDLER [nginx : Test nginx config] ************************************
+ok: [tf-web]
+
+RUNNING HANDLER [nginx : Reload nginx service] *********************************
+changed: [tf-web]
+
+PLAY [Smoke tests of every part] ***********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : Collect service state] *******************************************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : common | timezone and hostname] **********************************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : common | /etc/hosts: every server name -> its private IP] ********
+ok: [tf-db] => (item=tf-app)
+ok: [tf-app] => (item=tf-app)
+ok: [tf-db] => (item=tf-db)
+ok: [tf-web] => (item=tf-app)
+ok: [tf-db] => (item=tf-web)
+ok: [tf-app] => (item=tf-db)
+ok: [tf-web] => (item=tf-db)
+ok: [tf-app] => (item=tf-web)
+ok: [tf-web] => (item=tf-web)
+
+TASK [smoke : filesystem | directories of the role exist with the right owner and mode] ***
+ok: [tf-db] => (item=/var/backups/taskflow/db)
+ok: [tf-app] => (item=/opt/taskflow)
+ok: [tf-web] => (item=/var/www/taskflow)
+ok: [tf-db] => (item=/usr/local/bin/taskflow-backup.sh)
+ok: [tf-web] => (item=/etc/taskflow)
+ok: [tf-app] => (item=/srv/taskflow)
+ok: [tf-app] => (item=/etc/taskflow/app.env)
+
+TASK [smoke : users | role groups and users exist, bot has no password] ********
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : users | sudoers valid, bot may restart only taskflow] ************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : users | sshd: no root login, no passwords] ***********************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : users | developer can write code but cannot read user data (tf-app)] ***
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : packages | jq, fail2ban (apt) and node_exporter (binary) installed] ***
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : packages | psql 18 from apt.postgresql.org (tf-app)] *************
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : services | required services are running and enabled] ************
+ok: [tf-web] => (item=fail2ban)
+ok: [tf-app] => (item=fail2ban)
+ok: [tf-db] => (item=fail2ban)
+ok: [tf-web] => (item=node_exporter)
+ok: [tf-app] => (item=node_exporter)
+ok: [tf-web] => (item=nginx)
+ok: [tf-app] => (item=taskflow)
+ok: [tf-web] => (item=docker)
+ok: [tf-db] => (item=node_exporter)
+ok: [tf-db] => (item=postgresql@16-main)
+
+TASK [smoke : services | SSH listening (socket-activated on Ubuntu 24.04)] *****
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : firewall | UFW active, SSH rate-limited, only the role ports open] ***
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : firewall | fail2ban sshd jail active] ****************************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : network | tf-web -> tf-app:8000 API health] **********************
+skipping: [tf-app]
+skipping: [tf-db]
+ok: [tf-web]
+
+TASK [smoke : network | tf-web -> every server :9100 metrics (private)] ********
+skipping: [tf-app] => (item=tf-app) 
+skipping: [tf-app] => (item=tf-db) 
+skipping: [tf-db] => (item=tf-app) 
+skipping: [tf-app] => (item=tf-web) 
+skipping: [tf-app]
+skipping: [tf-db] => (item=tf-db) 
+skipping: [tf-db] => (item=tf-web) 
+skipping: [tf-db]
+ok: [tf-web] => (item=tf-app)
+ok: [tf-web] => (item=tf-db)
+ok: [tf-web] => (item=tf-web)
+
+TASK [smoke : network | tf-app -> tf-db:5432 SQL query as taskflow] ************
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : container | taskflow-status healthy (tf-web)] ********************
+skipping: [tf-app]
+skipping: [tf-db]
+[ERROR]: Task failed: Action failed: A 'failed_when' expression evaluated to 'True'.
+Origin: /Users/armansojbek/Desktop/ldoc/taskflow-infra/ansible/roles/smoke/tasks/main.yml:129:3
+
+127   when: tf_role == 'app'
+128
+129 - name: "container | taskflow-status healthy (tf-web)"
+      ^ column 3
+
+fatal: [tf-web]: FAILED! => 
+    changed: false
+    content: '{"service": "taskflow-status", "version": "1.0.0", "time": "2026-11-23 09:07:55",
+        "api": {"up": false, "error": "URLError"}, "nodes": [{"node": "tf-app", "up":
+        true, "load1": 0.5, "mem_used_pct": 37.8, "uptime_h": 14.6}, {"node": "tf-db",
+        "up": true, "load1": 0.23, "mem_used_pct": 31.6, "uptime_h": 14.6}, {"node": "tf-web",
+        "up": true, "load1": 0.5, "mem_used_pct": 37.8, "uptime_h": 14.6}]}'
+    content_length: '393'
+    content_type: application/json
+    cookies: {}
+    cookies_string: ''
+    date: Mon, 23 Nov 2026 09:07:55 GMT
+    elapsed: 3
+    failed_when_result: true
+    json:
+        api:
+            error: URLError
+            up: false
+        nodes:
+        -   load1: 0.5
+            mem_used_pct: 37.8
+            node: tf-app
+            up: true
+            uptime_h: 14.6
+        -   load1: 0.23
+            mem_used_pct: 31.6
+            node: tf-db
+            up: true
+            uptime_h: 14.6
+        -   load1: 0.5
+            mem_used_pct: 37.8
+            node: tf-web
+            up: true
+            uptime_h: 14.6
+        service: taskflow-status
+        time: '2026-11-23 09:07:55'
+        version: 1.0.0
+    msg: OK (393 bytes)
+    redirected: false
+    server: BaseHTTP/0.6 Python/3.12.16
+    status: 200
+    url: http://127.0.0.1:8080/api/status
+
+TASK [smoke : internet | public paths work] ************************************
+ok: [tf-app -> localhost] => (item=GET /)
+ok: [tf-app -> localhost] => (item=GET /api/health)
+ok: [tf-app -> localhost] => (item=POST /api/tasks)
+ok: [tf-app -> localhost] => (item=GET /status/)
+
+TASK [smoke : internet | private ports are closed from outside] ****************
+ok: [tf-app -> localhost] => (item=tf-app:8000 must be closed)
+ok: [tf-app -> localhost] => (item=tf-app:9100 must be closed)
+ok: [tf-app -> localhost] => (item=tf-db:5432 must be closed)
+ok: [tf-app -> localhost] => (item=tf-db:9100 must be closed)
+ok: [tf-app -> localhost] => (item=tf-web:9100 must be closed)
+
+PLAY RECAP *********************************************************************
+tf-app                     : ok=21   changed=0    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   
+tf-db                      : ok=16   changed=0    unreachable=0    failed=0    skipped=6    rescued=0    ignored=0   
+tf-web                     : ok=27   changed=2    unreachable=0    failed=1    skipped=3    rescued=0    ignored=0   
+

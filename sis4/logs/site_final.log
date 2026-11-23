@@ -1,0 +1,784 @@
+
+PLAY [Wait until new servers accept SSH] ***************************************
+
+TASK [Wait for SSH / cloud-init] ***********************************************
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+PLAY [Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-web]
+
+TASK [common : Hostname] *******************************************************
+ok: [tf-web]
+
+TASK [common : Timezone] *******************************************************
+ok: [tf-web]
+
+TASK [common : Create /swapfile] ***********************************************
+ok: [tf-web]
+
+TASK [common : Enable swap now] ************************************************
+skipping: [tf-web]
+
+TASK [common : Enable swap on boot] ********************************************
+ok: [tf-web]
+
+TASK [common : Upgrade all packages] *******************************************
+ok: [tf-web]
+
+TASK [common : Base packages (default Ubuntu repository)] **********************
+ok: [tf-web]
+
+TASK [common : Private names of all TaskFlow servers in /etc/hosts] ************
+ok: [tf-web]
+
+TASK [common : Read Oracle InstanceServices rules] *****************************
+ok: [tf-web]
+
+TASK [common : Keep Oracle InstanceServices rules in UFW] **********************
+ok: [tf-web]
+
+TASK [common : Remove Oracle rules still loaded in the kernel from boot time] ***
+ok: [tf-web]
+
+TASK [common : Message of the day] *********************************************
+ok: [tf-web]
+
+TASK [filesystem : Service account taskflow (no login shell)] ******************
+ok: [tf-web]
+
+TASK [filesystem : Common directories] *****************************************
+ok: [tf-web] => (item={'path': '/etc/taskflow', 'owner': 'root', 'mode': '0755'})
+ok: [tf-web] => (item={'path': '/var/log/taskflow', 'owner': 'taskflow', 'mode': '0750'})
+ok: [tf-web] => (item={'path': '/var/backups/taskflow', 'owner': 'root', 'mode': '0700'})
+
+TASK [filesystem : Common configuration] ***************************************
+ok: [tf-web]
+
+TASK [filesystem : Role directories] *******************************************
+changed: [tf-web] => (item={'path': '/var/www/taskflow', 'owner': 'www-data', 'mode': '0755'})
+ok: [tf-web] => (item={'path': '/var/www/taskflow/assets', 'owner': 'www-data', 'mode': '0755'})
+ok: [tf-web] => (item={'path': '/etc/taskflow/nginx', 'owner': 'root', 'mode': '0755'})
+
+TASK [filesystem : Front-end page] *********************************************
+ok: [tf-web]
+
+TASK [filesystem : README for user uploads] ************************************
+skipping: [tf-web]
+
+TASK [filesystem : Database schema and backup script] **************************
+skipping: [tf-web] => (item={'src': 'init.sql', 'dest': '/etc/taskflow/db/init.sql', 'mode': '0644'}) 
+skipping: [tf-web] => (item={'src': 'taskflow-backup.sh', 'dest': '/usr/local/bin/taskflow-backup.sh', 'mode': '0755'}) 
+skipping: [tf-web]
+
+TASK [users : Role groups] *****************************************************
+ok: [tf-web] => (item=tf-admins)
+ok: [tf-web] => (item=tf-developers)
+ok: [tf-web] => (item=tf-auditors)
+ok: [tf-web] => (item=tf-automation)
+
+TASK [users : Existing accounts (to know which users are new)] *****************
+ok: [tf-web]
+
+TASK [users : Human users (primary group = their role)] ************************
+ok: [tf-web] => (item=tfadmin)
+ok: [tf-web] => (item=tfdev)
+ok: [tf-web] => (item=tfauditor)
+
+TASK [users : Temporary password, must be changed on first login (only for new users)] ***
+skipping: [tf-web] => (item=(censored due to no_log)) 
+skipping: [tf-web] => (item=(censored due to no_log)) 
+skipping: [tf-web] => (item=(censored due to no_log)) 
+skipping: [tf-web]
+
+TASK [users : Home directories closed to other users] **************************
+ok: [tf-web] => (item=tfadmin)
+ok: [tf-web] => (item=tfdev)
+ok: [tf-web] => (item=tfauditor)
+
+TASK [users : CI/CD bot - no password at all, SSH key only] ********************
+ok: [tf-web]
+
+TASK [users : Bot home directory mode] *****************************************
+ok: [tf-web]
+
+TASK [users : Bot public key (private key stays on the laptop)] ****************
+ok: [tf-web]
+
+TASK [users : File permissions with ACL (access + default for new files)] ******
+ok: [tf-web] => (item=/var/log/taskflow tf-developers:rx access)
+ok: [tf-web] => (item=/var/log/taskflow tf-developers:rx default)
+ok: [tf-web] => (item=/var/log/taskflow tf-auditors:rx access)
+ok: [tf-web] => (item=/var/log/taskflow tf-auditors:rx default)
+ok: [tf-web] => (item=/etc/taskflow tf-developers:rx access)
+ok: [tf-web] => (item=/etc/taskflow tf-developers:rx default)
+ok: [tf-web] => (item=/etc/taskflow tf-auditors:rx access)
+ok: [tf-web] => (item=/etc/taskflow tf-auditors:rx default)
+changed: [tf-web] => (item=/var/www/taskflow tf-developers:rwx access)
+ok: [tf-web] => (item=/var/www/taskflow tf-developers:rwx default)
+ok: [tf-web] => (item=/var/www/taskflow tf-automation:rwx access)
+ok: [tf-web] => (item=/var/www/taskflow tf-automation:rwx default)
+ok: [tf-web] => (item=/var/www/taskflow tf-auditors:rx access)
+ok: [tf-web] => (item=/var/www/taskflow tf-auditors:rx default)
+
+TASK [users : Role-based sudo rules (checked with visudo before they are installed)] ***
+ok: [tf-web]
+
+TASK [users : SSH hardening (50- is read before the cloud 60- file, first value wins)] ***
+ok: [tf-web]
+
+TASK [packages : 1. Packages from the default Ubuntu repository] ***************
+ok: [tf-web]
+
+TASK [packages : 2. New repository apt.postgresql.org - key directory] *********
+skipping: [tf-web]
+
+TASK [packages : 2. New repository apt.postgresql.org - signing key (trusted only for this repo)] ***
+skipping: [tf-web]
+
+TASK [packages : 2. New repository apt.postgresql.org - source (deb822 format, key bound with Signed-By)] ***
+skipping: [tf-web]
+
+TASK [packages : 2. Old one-line source of the same repository (from the SIS3 script) is not needed] ***
+skipping: [tf-web]
+
+TASK [packages : 2. psql client from the new repository] ***********************
+skipping: [tf-web]
+
+TASK [packages : 3. node_exporter from GitHub releases - download and verify SHA-256] ***
+ok: [tf-web]
+
+TASK [packages : 3. node_exporter - unpack] ************************************
+skipping: [tf-web]
+
+TASK [packages : 3. node_exporter - install binary to /usr/local/bin] **********
+ok: [tf-web]
+
+TASK [packages : 3. node_exporter - system user] *******************************
+ok: [tf-web]
+
+TASK [packages : 3. node_exporter - systemd unit (listens on the private address only)] ***
+ok: [tf-web]
+
+TASK [packages : 3. node_exporter - enabled and running] ***********************
+ok: [tf-web]
+
+TASK [firewall : Default policies] *********************************************
+ok: [tf-web] => (item={'dir': 'incoming', 'policy': 'deny'})
+ok: [tf-web] => (item={'dir': 'outgoing', 'policy': 'allow'})
+ok: [tf-web] => (item={'dir': 'routed', 'policy': 'deny'})
+
+TASK [firewall : SSH open to the world but rate-limited (6 new connections / 30 s per IP)] ***
+ok: [tf-web]
+
+TASK [firewall : Remove a plain (not limited) SSH rule if it exists] ***********
+ok: [tf-web]
+
+TASK [firewall : Service ports of this role] ***********************************
+ok: [tf-web] => (item=80 from any)
+ok: [tf-web] => (item=9100 from 172.17.0.0/16)
+ok: [tf-web] => (item=9100 from 10.0.0.0/16)
+
+TASK [firewall : Enable UFW] ***************************************************
+ok: [tf-web]
+
+TASK [firewall : fail2ban - ban SSH brute force for 1 hour] ********************
+ok: [tf-web]
+
+TASK [firewall : fail2ban enabled and running] *********************************
+ok: [tf-web]
+
+PLAY [Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-app]
+
+TASK [common : Hostname] *******************************************************
+ok: [tf-app]
+
+TASK [common : Timezone] *******************************************************
+ok: [tf-app]
+
+TASK [common : Create /swapfile] ***********************************************
+ok: [tf-app]
+
+TASK [common : Enable swap now] ************************************************
+skipping: [tf-app]
+
+TASK [common : Enable swap on boot] ********************************************
+ok: [tf-app]
+
+TASK [common : Upgrade all packages] *******************************************
+ok: [tf-app]
+
+TASK [common : Base packages (default Ubuntu repository)] **********************
+ok: [tf-app]
+
+TASK [common : Private names of all TaskFlow servers in /etc/hosts] ************
+ok: [tf-app]
+
+TASK [common : Read Oracle InstanceServices rules] *****************************
+ok: [tf-app]
+
+TASK [common : Keep Oracle InstanceServices rules in UFW] **********************
+ok: [tf-app]
+
+TASK [common : Remove Oracle rules still loaded in the kernel from boot time] ***
+ok: [tf-app]
+
+TASK [common : Message of the day] *********************************************
+ok: [tf-app]
+
+TASK [filesystem : Service account taskflow (no login shell)] ******************
+ok: [tf-app]
+
+TASK [filesystem : Common directories] *****************************************
+ok: [tf-app] => (item={'path': '/etc/taskflow', 'owner': 'root', 'mode': '0755'})
+ok: [tf-app] => (item={'path': '/var/log/taskflow', 'owner': 'taskflow', 'mode': '0750'})
+ok: [tf-app] => (item={'path': '/var/backups/taskflow', 'owner': 'root', 'mode': '0700'})
+
+TASK [filesystem : Common configuration] ***************************************
+ok: [tf-app]
+
+TASK [filesystem : Role directories] *******************************************
+changed: [tf-app] => (item={'path': '/opt/taskflow', 'owner': 'taskflow', 'mode': '0755'})
+ok: [tf-app] => (item={'path': '/opt/taskflow/releases', 'owner': 'taskflow', 'mode': '0755'})
+ok: [tf-app] => (item={'path': '/srv/taskflow', 'owner': 'taskflow', 'mode': '0750'})
+ok: [tf-app] => (item={'path': '/srv/taskflow/uploads', 'owner': 'taskflow', 'mode': '0750'})
+ok: [tf-app] => (item={'path': '/var/lib/taskflow', 'owner': 'taskflow', 'mode': '0750'})
+
+TASK [filesystem : Front-end page] *********************************************
+skipping: [tf-app]
+
+TASK [filesystem : README for user uploads] ************************************
+ok: [tf-app]
+
+TASK [filesystem : Database schema and backup script] **************************
+skipping: [tf-app] => (item={'src': 'init.sql', 'dest': '/etc/taskflow/db/init.sql', 'mode': '0644'}) 
+skipping: [tf-app] => (item={'src': 'taskflow-backup.sh', 'dest': '/usr/local/bin/taskflow-backup.sh', 'mode': '0755'}) 
+skipping: [tf-app]
+
+TASK [users : Role groups] *****************************************************
+ok: [tf-app] => (item=tf-admins)
+ok: [tf-app] => (item=tf-developers)
+ok: [tf-app] => (item=tf-auditors)
+ok: [tf-app] => (item=tf-automation)
+
+TASK [users : Existing accounts (to know which users are new)] *****************
+ok: [tf-app]
+
+TASK [users : Human users (primary group = their role)] ************************
+ok: [tf-app] => (item=tfadmin)
+ok: [tf-app] => (item=tfdev)
+ok: [tf-app] => (item=tfauditor)
+
+TASK [users : Temporary password, must be changed on first login (only for new users)] ***
+skipping: [tf-app] => (item=(censored due to no_log)) 
+skipping: [tf-app] => (item=(censored due to no_log)) 
+skipping: [tf-app] => (item=(censored due to no_log)) 
+skipping: [tf-app]
+
+TASK [users : Home directories closed to other users] **************************
+ok: [tf-app] => (item=tfadmin)
+ok: [tf-app] => (item=tfdev)
+ok: [tf-app] => (item=tfauditor)
+
+TASK [users : CI/CD bot - no password at all, SSH key only] ********************
+ok: [tf-app]
+
+TASK [users : Bot home directory mode] *****************************************
+ok: [tf-app]
+
+TASK [users : Bot public key (private key stays on the laptop)] ****************
+ok: [tf-app]
+
+TASK [users : File permissions with ACL (access + default for new files)] ******
+ok: [tf-app] => (item=/var/log/taskflow tf-developers:rx access)
+ok: [tf-app] => (item=/var/log/taskflow tf-developers:rx default)
+ok: [tf-app] => (item=/var/log/taskflow tf-auditors:rx access)
+ok: [tf-app] => (item=/var/log/taskflow tf-auditors:rx default)
+ok: [tf-app] => (item=/etc/taskflow tf-developers:rx access)
+ok: [tf-app] => (item=/etc/taskflow tf-developers:rx default)
+ok: [tf-app] => (item=/etc/taskflow tf-auditors:rx access)
+ok: [tf-app] => (item=/etc/taskflow tf-auditors:rx default)
+changed: [tf-app] => (item=/opt/taskflow tf-developers:rwx access)
+ok: [tf-app] => (item=/opt/taskflow tf-developers:rwx default)
+ok: [tf-app] => (item=/opt/taskflow tf-automation:rwx access)
+ok: [tf-app] => (item=/opt/taskflow tf-automation:rwx default)
+ok: [tf-app] => (item=/opt/taskflow tf-auditors:rx access)
+ok: [tf-app] => (item=/opt/taskflow tf-auditors:rx default)
+
+TASK [users : Role-based sudo rules (checked with visudo before they are installed)] ***
+ok: [tf-app]
+
+TASK [users : SSH hardening (50- is read before the cloud 60- file, first value wins)] ***
+ok: [tf-app]
+
+TASK [packages : 1. Packages from the default Ubuntu repository] ***************
+ok: [tf-app]
+
+TASK [packages : 2. New repository apt.postgresql.org - key directory] *********
+ok: [tf-app]
+
+TASK [packages : 2. New repository apt.postgresql.org - signing key (trusted only for this repo)] ***
+ok: [tf-app]
+
+TASK [packages : 2. New repository apt.postgresql.org - source (deb822 format, key bound with Signed-By)] ***
+ok: [tf-app]
+
+TASK [packages : 2. Old one-line source of the same repository (from the SIS3 script) is not needed] ***
+ok: [tf-app]
+
+TASK [packages : 2. psql client from the new repository] ***********************
+ok: [tf-app]
+
+TASK [packages : 3. node_exporter from GitHub releases - download and verify SHA-256] ***
+ok: [tf-app]
+
+TASK [packages : 3. node_exporter - unpack] ************************************
+skipping: [tf-app]
+
+TASK [packages : 3. node_exporter - install binary to /usr/local/bin] **********
+ok: [tf-app]
+
+TASK [packages : 3. node_exporter - system user] *******************************
+ok: [tf-app]
+
+TASK [packages : 3. node_exporter - systemd unit (listens on the private address only)] ***
+ok: [tf-app]
+
+TASK [packages : 3. node_exporter - enabled and running] ***********************
+ok: [tf-app]
+
+TASK [firewall : Default policies] *********************************************
+ok: [tf-app] => (item={'dir': 'incoming', 'policy': 'deny'})
+ok: [tf-app] => (item={'dir': 'outgoing', 'policy': 'allow'})
+ok: [tf-app] => (item={'dir': 'routed', 'policy': 'deny'})
+
+TASK [firewall : SSH open to the world but rate-limited (6 new connections / 30 s per IP)] ***
+ok: [tf-app]
+
+TASK [firewall : Remove a plain (not limited) SSH rule if it exists] ***********
+ok: [tf-app]
+
+TASK [firewall : Service ports of this role] ***********************************
+ok: [tf-app] => (item=8000 from 10.0.0.0/16)
+ok: [tf-app] => (item=9100 from 10.0.0.0/16)
+ok: [tf-app] => (item=8000 from 172.17.0.0/16)
+
+TASK [firewall : Enable UFW] ***************************************************
+ok: [tf-app]
+
+TASK [firewall : fail2ban - ban SSH brute force for 1 hour] ********************
+ok: [tf-app]
+
+TASK [firewall : fail2ban enabled and running] *********************************
+ok: [tf-app]
+
+PLAY [Base system, filesystem, users and permissions, packages, firewall (SIS1-SIS3)] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+
+TASK [common : Hostname] *******************************************************
+ok: [tf-db]
+
+TASK [common : Timezone] *******************************************************
+ok: [tf-db]
+
+TASK [common : Create /swapfile] ***********************************************
+ok: [tf-db]
+
+TASK [common : Enable swap now] ************************************************
+skipping: [tf-db]
+
+TASK [common : Enable swap on boot] ********************************************
+ok: [tf-db]
+
+TASK [common : Upgrade all packages] *******************************************
+ok: [tf-db]
+
+TASK [common : Base packages (default Ubuntu repository)] **********************
+ok: [tf-db]
+
+TASK [common : Private names of all TaskFlow servers in /etc/hosts] ************
+ok: [tf-db]
+
+TASK [common : Read Oracle InstanceServices rules] *****************************
+ok: [tf-db]
+
+TASK [common : Keep Oracle InstanceServices rules in UFW] **********************
+ok: [tf-db]
+
+TASK [common : Remove Oracle rules still loaded in the kernel from boot time] ***
+ok: [tf-db]
+
+TASK [common : Message of the day] *********************************************
+ok: [tf-db]
+
+TASK [filesystem : Service account taskflow (no login shell)] ******************
+ok: [tf-db]
+
+TASK [filesystem : Common directories] *****************************************
+ok: [tf-db] => (item={'path': '/etc/taskflow', 'owner': 'root', 'mode': '0755'})
+ok: [tf-db] => (item={'path': '/var/log/taskflow', 'owner': 'taskflow', 'mode': '0750'})
+ok: [tf-db] => (item={'path': '/var/backups/taskflow', 'owner': 'root', 'mode': '0700'})
+
+TASK [filesystem : Common configuration] ***************************************
+ok: [tf-db]
+
+TASK [filesystem : Role directories] *******************************************
+ok: [tf-db] => (item={'path': '/etc/taskflow/db', 'owner': 'root', 'mode': '0755'})
+ok: [tf-db] => (item={'path': '/var/backups/taskflow/db', 'owner': 'root', 'mode': '0700'})
+
+TASK [filesystem : Front-end page] *********************************************
+skipping: [tf-db]
+
+TASK [filesystem : README for user uploads] ************************************
+skipping: [tf-db]
+
+TASK [filesystem : Database schema and backup script] **************************
+ok: [tf-db] => (item={'src': 'init.sql', 'dest': '/etc/taskflow/db/init.sql', 'mode': '0644'})
+ok: [tf-db] => (item={'src': 'taskflow-backup.sh', 'dest': '/usr/local/bin/taskflow-backup.sh', 'mode': '0755'})
+
+TASK [users : Role groups] *****************************************************
+ok: [tf-db] => (item=tf-admins)
+ok: [tf-db] => (item=tf-developers)
+ok: [tf-db] => (item=tf-auditors)
+ok: [tf-db] => (item=tf-automation)
+
+TASK [users : Existing accounts (to know which users are new)] *****************
+ok: [tf-db]
+
+TASK [users : Human users (primary group = their role)] ************************
+ok: [tf-db] => (item=tfadmin)
+ok: [tf-db] => (item=tfdev)
+ok: [tf-db] => (item=tfauditor)
+
+TASK [users : Temporary password, must be changed on first login (only for new users)] ***
+skipping: [tf-db] => (item=(censored due to no_log)) 
+skipping: [tf-db] => (item=(censored due to no_log)) 
+skipping: [tf-db] => (item=(censored due to no_log)) 
+skipping: [tf-db]
+
+TASK [users : Home directories closed to other users] **************************
+ok: [tf-db] => (item=tfadmin)
+ok: [tf-db] => (item=tfdev)
+ok: [tf-db] => (item=tfauditor)
+
+TASK [users : CI/CD bot - no password at all, SSH key only] ********************
+ok: [tf-db]
+
+TASK [users : Bot home directory mode] *****************************************
+ok: [tf-db]
+
+TASK [users : Bot public key (private key stays on the laptop)] ****************
+ok: [tf-db]
+
+TASK [users : File permissions with ACL (access + default for new files)] ******
+ok: [tf-db] => (item=/var/log/taskflow tf-developers:rx access)
+ok: [tf-db] => (item=/var/log/taskflow tf-developers:rx default)
+ok: [tf-db] => (item=/var/log/taskflow tf-auditors:rx access)
+ok: [tf-db] => (item=/var/log/taskflow tf-auditors:rx default)
+ok: [tf-db] => (item=/etc/taskflow tf-developers:rx access)
+ok: [tf-db] => (item=/etc/taskflow tf-developers:rx default)
+ok: [tf-db] => (item=/etc/taskflow tf-auditors:rx access)
+ok: [tf-db] => (item=/etc/taskflow tf-auditors:rx default)
+
+TASK [users : Role-based sudo rules (checked with visudo before they are installed)] ***
+ok: [tf-db]
+
+TASK [users : SSH hardening (50- is read before the cloud 60- file, first value wins)] ***
+ok: [tf-db]
+
+TASK [packages : 1. Packages from the default Ubuntu repository] ***************
+ok: [tf-db]
+
+TASK [packages : 2. New repository apt.postgresql.org - key directory] *********
+skipping: [tf-db]
+
+TASK [packages : 2. New repository apt.postgresql.org - signing key (trusted only for this repo)] ***
+skipping: [tf-db]
+
+TASK [packages : 2. New repository apt.postgresql.org - source (deb822 format, key bound with Signed-By)] ***
+skipping: [tf-db]
+
+TASK [packages : 2. Old one-line source of the same repository (from the SIS3 script) is not needed] ***
+skipping: [tf-db]
+
+TASK [packages : 2. psql client from the new repository] ***********************
+skipping: [tf-db]
+
+TASK [packages : 3. node_exporter from GitHub releases - download and verify SHA-256] ***
+ok: [tf-db]
+
+TASK [packages : 3. node_exporter - unpack] ************************************
+skipping: [tf-db]
+
+TASK [packages : 3. node_exporter - install binary to /usr/local/bin] **********
+ok: [tf-db]
+
+TASK [packages : 3. node_exporter - system user] *******************************
+ok: [tf-db]
+
+TASK [packages : 3. node_exporter - systemd unit (listens on the private address only)] ***
+ok: [tf-db]
+
+TASK [packages : 3. node_exporter - enabled and running] ***********************
+ok: [tf-db]
+
+TASK [firewall : Default policies] *********************************************
+ok: [tf-db] => (item={'dir': 'incoming', 'policy': 'deny'})
+ok: [tf-db] => (item={'dir': 'outgoing', 'policy': 'allow'})
+ok: [tf-db] => (item={'dir': 'routed', 'policy': 'deny'})
+
+TASK [firewall : SSH open to the world but rate-limited (6 new connections / 30 s per IP)] ***
+ok: [tf-db]
+
+TASK [firewall : Remove a plain (not limited) SSH rule if it exists] ***********
+ok: [tf-db]
+
+TASK [firewall : Service ports of this role] ***********************************
+ok: [tf-db] => (item=5432 from 10.0.0.0/16)
+ok: [tf-db] => (item=9100 from 10.0.0.0/16)
+
+TASK [firewall : Enable UFW] ***************************************************
+ok: [tf-db]
+
+TASK [firewall : fail2ban - ban SSH brute force for 1 hour] ********************
+ok: [tf-db]
+
+TASK [firewall : fail2ban enabled and running] *********************************
+ok: [tf-db]
+
+PLAY [Database server] *********************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+
+TASK [postgresql : PostgreSQL server and Python driver for Ansible] ************
+ok: [tf-db]
+
+TASK [postgresql : Listen on localhost and the private address only] ***********
+ok: [tf-db]
+
+TASK [postgresql : Allow only the private network to log in as taskflow (password, scram)] ***
+ok: [tf-db]
+
+TASK [postgresql : PostgreSQL enabled and running] *****************************
+ok: [tf-db]
+
+TASK [postgresql : Apply config changes before creating objects] ***************
+
+TASK [postgresql : Database user] **********************************************
+ok: [tf-db]
+
+TASK [postgresql : Database] ***************************************************
+ok: [tf-db]
+
+TASK [postgresql : Schema (CREATE TABLE IF NOT EXISTS - safe to run every time)] ***
+ok: [tf-db]
+
+TASK [postgresql : Tables owned by the application user] ***********************
+ok: [tf-db] => (item=users)
+ok: [tf-db] => (item=tasks)
+
+TASK [postgresql : Daily backup at 02:00] **************************************
+ok: [tf-db]
+
+PLAY [Application server] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-app]
+
+TASK [taskflow_api : Python runtime] *******************************************
+ok: [tf-app]
+
+TASK [taskflow_api : Secrets file (readable only by root and the service group)] ***
+ok: [tf-app]
+
+TASK [taskflow_api : Release directory] ****************************************
+ok: [tf-app]
+
+TASK [taskflow_api : Application code] *****************************************
+ok: [tf-app]
+
+TASK [taskflow_api : Current release symlink (rollback = point it to an older release)] ***
+ok: [tf-app]
+
+TASK [taskflow_api : systemd unit] *********************************************
+ok: [tf-app]
+
+TASK [taskflow_api : Service enabled at boot and running] **********************
+ok: [tf-app]
+
+PLAY [Web server] **************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-web]
+
+TASK [nginx : Nginx] ***********************************************************
+ok: [tf-web]
+
+TASK [nginx : TaskFlow site config] ********************************************
+ok: [tf-web]
+
+TASK [nginx : Enable the site, disable the default one] ************************
+ok: [tf-web] => (item={'name': 'taskflow', 'state': 'link', 'src': '/etc/taskflow/nginx/taskflow.conf'})
+ok: [tf-web] => (item={'name': 'default', 'state': 'absent'})
+
+TASK [nginx : Nginx enabled and running] ***************************************
+ok: [tf-web]
+
+TASK [status_app : Docker engine and Python SDK for Ansible] *******************
+ok: [tf-web]
+
+TASK [status_app : Docker enabled and running] *********************************
+ok: [tf-web]
+
+TASK [status_app : taskflow-status container (published on localhost only, Nginx proxies /status/)] ***
+ok: [tf-web]
+
+PLAY [Smoke tests of every part] ***********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : Collect service state] *******************************************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : common | timezone and hostname] **********************************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : common | /etc/hosts: every server name -> its private IP] ********
+ok: [tf-db] => (item=tf-app)
+ok: [tf-app] => (item=tf-app)
+ok: [tf-web] => (item=tf-app)
+ok: [tf-db] => (item=tf-db)
+ok: [tf-db] => (item=tf-web)
+ok: [tf-app] => (item=tf-db)
+ok: [tf-web] => (item=tf-db)
+ok: [tf-app] => (item=tf-web)
+ok: [tf-web] => (item=tf-web)
+
+TASK [smoke : filesystem | directories of the role exist with the right owner and mode] ***
+ok: [tf-db] => (item=/var/backups/taskflow/db)
+ok: [tf-web] => (item=/var/www/taskflow)
+ok: [tf-app] => (item=/opt/taskflow)
+ok: [tf-db] => (item=/usr/local/bin/taskflow-backup.sh)
+ok: [tf-app] => (item=/srv/taskflow)
+ok: [tf-web] => (item=/etc/taskflow)
+ok: [tf-app] => (item=/etc/taskflow/app.env)
+
+TASK [smoke : users | role groups and users exist, bot has no password] ********
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : users | sudoers valid, bot may restart only taskflow] ************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : users | sshd: no root login, no passwords] ***********************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : users | developer can write code but cannot read user data (tf-app)] ***
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : packages | jq, fail2ban (apt) and node_exporter (binary) installed] ***
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : packages | psql 18 from apt.postgresql.org (tf-app)] *************
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : services | required services are running and enabled] ************
+ok: [tf-web] => (item=fail2ban)
+ok: [tf-app] => (item=fail2ban)
+ok: [tf-web] => (item=node_exporter)
+ok: [tf-db] => (item=fail2ban)
+ok: [tf-web] => (item=nginx)
+ok: [tf-app] => (item=node_exporter)
+ok: [tf-web] => (item=docker)
+ok: [tf-app] => (item=taskflow)
+ok: [tf-db] => (item=node_exporter)
+ok: [tf-db] => (item=postgresql@16-main)
+
+TASK [smoke : services | SSH listening (socket-activated on Ubuntu 24.04)] *****
+ok: [tf-db]
+ok: [tf-web]
+ok: [tf-app]
+
+TASK [smoke : firewall | UFW active, SSH rate-limited, only the role ports open] ***
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : firewall | fail2ban sshd jail active] ****************************
+ok: [tf-db]
+ok: [tf-app]
+ok: [tf-web]
+
+TASK [smoke : network | tf-web -> tf-app:8000 API health] **********************
+skipping: [tf-app]
+skipping: [tf-db]
+ok: [tf-web]
+
+TASK [smoke : network | tf-web -> every server :9100 metrics (private)] ********
+skipping: [tf-app] => (item=tf-app) 
+skipping: [tf-app] => (item=tf-db) 
+skipping: [tf-app] => (item=tf-web) 
+skipping: [tf-db] => (item=tf-app) 
+skipping: [tf-app]
+skipping: [tf-db] => (item=tf-db) 
+skipping: [tf-db] => (item=tf-web) 
+skipping: [tf-db]
+ok: [tf-web] => (item=tf-app)
+ok: [tf-web] => (item=tf-db)
+ok: [tf-web] => (item=tf-web)
+
+TASK [smoke : network | tf-app -> tf-db:5432 SQL query as taskflow] ************
+skipping: [tf-web]
+skipping: [tf-db]
+ok: [tf-app]
+
+TASK [smoke : container | taskflow-status healthy (tf-web)] ********************
+skipping: [tf-app]
+skipping: [tf-db]
+ok: [tf-web]
+
+TASK [smoke : internet | public paths work] ************************************
+ok: [tf-web -> localhost] => (item=GET /)
+ok: [tf-web -> localhost] => (item=GET /api/health)
+ok: [tf-web -> localhost] => (item=POST /api/tasks)
+ok: [tf-web -> localhost] => (item=GET /status/)
+
+TASK [smoke : internet | private ports are closed from outside] ****************
+ok: [tf-web -> localhost] => (item=tf-app:8000 must be closed)
+ok: [tf-web -> localhost] => (item=tf-app:9100 must be closed)
+ok: [tf-web -> localhost] => (item=tf-db:5432 must be closed)
+ok: [tf-web -> localhost] => (item=tf-db:9100 must be closed)
+ok: [tf-web -> localhost] => (item=tf-web:9100 must be closed)
+
+PLAY RECAP *********************************************************************
+tf-app                     : ok=70   changed=2    unreachable=0    failed=0    skipped=8    rescued=0    ignored=0   
+tf-db                      : ok=64   changed=0    unreachable=0    failed=0    skipped=16   rescued=0    ignored=0   
+tf-web                     : ok=67   changed=2    unreachable=0    failed=0    skipped=13   rescued=0    ignored=0   
+
